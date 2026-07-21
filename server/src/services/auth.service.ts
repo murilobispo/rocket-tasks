@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken'
 import { prisma } from '@/lib/prisma'
 import { AppError } from '@/utils/AppError'
 import { LoginInput, RegisterInput } from '@/types/auth.types'
+import { env } from "@/config/env"
 
 const SALT_ROUNDS = 10
 
@@ -28,7 +29,7 @@ export async function register({ name, email, password }: RegisterInput) {
 
 	const token = jwt.sign(
     { userId: user.id },
-    process.env.JWT_SECRET!,
+    env.JWT_SECRET,
     { expiresIn: '7d' }
   )
 	
@@ -59,7 +60,7 @@ export async function login({ email, password }: LoginInput) {
 
 	const token = jwt.sign(
     { userId: user.id },
-    process.env.JWT_SECRET!,
+    env.JWT_SECRET,
     { expiresIn: '7d' }
   )
 
