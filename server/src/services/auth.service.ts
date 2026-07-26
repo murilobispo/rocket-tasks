@@ -5,19 +5,16 @@ import { AppError } from '@/utils/AppError'
 import { LoginInput, RegisterInput } from '@/types/auth.types'
 import { env } from "@/config/env"
 
-const SALT_ROUNDS = 10
-
 export async function register({ name, email, password }: RegisterInput) {
-
 	const userExists = await prisma.user.findUnique({
 		where: { email }
 	})
 
-	if (userExists ){
+	if (userExists){
 		throw new AppError('Email already registered', 409)
 	}
 
-	const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS)
+	const hashedPassword = await bcrypt.hash(password, env.SALT_ROUNDS)
 
 	const user = await prisma.user.create({
 		data: {
@@ -72,17 +69,4 @@ export async function login({ email, password }: LoginInput) {
       email: user.email
     }
   }
-}
-
-export async function getMe(userId : string) {
-	const user = await prisma.user.findUnique({
-		where: { id: userId },
-		omit: { password: true}
-	})
-
-	if (!user) {
-		throw new AppError('User not found', 404)
-	}
-	
-	return user
 }
