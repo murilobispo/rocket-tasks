@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma'
-import { UpdateMeInput, UpdatePasswordType } from '@/types/users.types'
+import { UpdateMeInput, UpdatePasswordInput } from '@/types/users.types'
 import { AppError } from '@/utils/AppError'
 import bcrypt from 'bcrypt'
 import { env } from '@/config/env'
@@ -27,7 +27,7 @@ export async function updateMe(userId: string, data: UpdateMeInput) {
 	return user
 }
 
-export async function updatePassword(	userId: string, data: UpdatePasswordType) {
+export async function updatePassword(	userId: string, data: UpdatePasswordInput) {
 	const user = await prisma.user.findUnique({
 		where: {id : userId}
 	})

@@ -3,11 +3,11 @@ import { AppError } from '@/utils/AppError'
 import { register as registerService } from '@/services/auth.service'
 import { login as loginService } from '@/services/auth.service'
 
-export async function register (req: Request, res: Response) {
+export async function register(req: Request, res: Response) {
 	try {
 		const result = await registerService(req.body)
 		return res.status(201).json(result)
-	} catch (error){
+	} catch (error) {
 		if (error instanceof AppError){
 			return res.status(error.statusCode).json({ message: error.message })
 		}
@@ -15,7 +15,7 @@ export async function register (req: Request, res: Response) {
 	}
 }
 
-export async function login (req: Request, res: Response) {
+export async function login(req: Request, res: Response) {
 	try {
 		const result = await loginService(req.body)
 		return res.status(200).json(result)

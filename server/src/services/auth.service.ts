@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 import { prisma } from '@/lib/prisma'
 import { AppError } from '@/utils/AppError'
 import { LoginInput, RegisterInput } from '@/types/auth.types'
-import { env } from "@/config/env"
+import { env } from '@/config/env'
 
 export async function register({ name, email, password }: RegisterInput) {
 	const userExists = await prisma.user.findUnique({
