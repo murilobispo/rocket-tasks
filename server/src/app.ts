@@ -4,6 +4,7 @@ import { authRoutes } from '@/routes/auth.routes'
 import { usersRoutes } from '@/routes/users.routes'
 import { listsRouter } from '@/routes/lists.routes'
 import { tasksRouter } from './routes/tasks.routes'
+import { errorHandler } from './middlewares/errorHandler'
 const app = express()
 
 app.use(express.json())
@@ -18,4 +19,5 @@ app.use('/users', usersRoutes)
 app.use('/lists', listsRouter)
 app.use('/tasks', tasksRouter)
 
+app.use(errorHandler)
 export default app
