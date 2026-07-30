@@ -7,7 +7,8 @@ import { env } from '@/config/env'
 
 export async function register({ name, email, password }: RegisterInput) {
 	const userExists = await prisma.user.findUnique({
-		where: { email }
+		where: { email },
+		select: { id: true}
 	})
 
 	if (userExists){

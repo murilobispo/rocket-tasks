@@ -7,7 +7,15 @@ import { env } from '@/config/env'
 export async function getMe(userId : string) {
 	const user = await prisma.user.findUnique({
 		where: { id: userId },
-		omit: { password: true}
+		omit: { password: true},
+		include: {
+			_count:{
+				select: { 
+					tasks: true,
+					lists: true,
+				}
+			}
+		}
 	})
 
 	if (!user) {

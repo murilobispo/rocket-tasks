@@ -5,10 +5,13 @@ export const createListSchema = z.object({
 	description: z.string().trim().max(255).optional(),
 	color: z.string().startsWith('#').length(7).toLowerCase().regex(/^#[0-9a-f]{6}$/).optional()
 })
+
 const { title, description, color } = createListSchema.shape
 
 export const updateListSchema = z.object({
 	title: title.optional(),
 	description,
 	color
+}).refine(data => Object.keys(data).length > 0, {
+  message: 'At least one field must be provided'
 })

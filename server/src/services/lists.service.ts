@@ -20,7 +20,12 @@ export async function createList(userId: string, data: CreateListInput) {
 export async function getLists(userId: string) {
 	const lists = await prisma.list.findMany({
 		where: { userId },
-		omit: { userId: true }
+		omit: { userId: true },
+    include: {
+      _count: {
+        select: { tasks: true }
+      }
+    }
 	})
 	
 	return lists
