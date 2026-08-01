@@ -5,7 +5,8 @@
   "main": "src/server.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon --watch . --ext ts --exec tsx src/server.ts"
+    "dev": "nodemon --watch . --ext ts --exec tsx src/server.ts",
+    "start": "npx prisma generate && npx prisma migrate deploy && tsx src/server.ts"
   },
   "keywords": [],
   "author": "",
@@ -17,10 +18,11 @@
     "@scalar/express-api-reference": "^0.10.11",
     "bcrypt": "^6.0.0",
     "date-fns": "^4.4.0",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
     "helmet": "^8.3.0",
     "jsonwebtoken": "^9.0.3",
     "pg": "^8.21.0",
-    "tsx": "^4.22.3",
     "zod": "^4.4.3"
   },
   "devDependencies": {
@@ -29,16 +31,13 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^25.9.1",
     "@types/pg": "^8.20.0",
-    "dotenv": "^17.4.2",
     "eslint": "^10.4.0",
-    "express": "^5.2.1",
-    "install": "^0.13.0",
     "nodemon": "^3.1.14",
-    "npm": "^11.15.0",
     "prettier": "^3.8.3",
     "prisma": "^7.9.0",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
+    "tsx": "^4.22.3",
     "typescript": "^6.0.3"
   }
 }
