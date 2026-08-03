@@ -8,6 +8,7 @@ import { usersRoutes } from '@/routes/users.routes'
 import { listsRouter } from '@/routes/lists.routes'
 import { tasksRouter } from '@/routes/tasks.routes'
 import { errorHandler } from '@/middlewares/errorHandler'
+import { env } from './config/env'
 
 const app = express()
 
@@ -43,7 +44,10 @@ app.get('/openapi.yaml', (req, res) => {
 })
 
 app.use('/docs',apiReference({
-    url: '/openapi.yaml',
+     url: '/openapi.yaml',
+    servers: [
+      { url: `http://localhost:${env.PORT}`, description: 'Local Development' }
+    ],
     agent: {
       disabled: true
     },

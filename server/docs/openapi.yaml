@@ -14,10 +14,6 @@ info:
     name: Rocket Tasks
     url: https://github.com/your-username/rocket-tasks
 
-servers:
-  - url: http://localhost:3000
-    description: Local Development
-
 security: []
 
 tags:
