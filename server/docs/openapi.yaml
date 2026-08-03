@@ -1,0 +1,983 @@
+openapi: 3.0.0
+info:
+  title: Rocket Tasks
+  description: |
+    A fullstack task management API with authentication, lists and tasks.
+
+    ## Authentication
+    Most endpoints require a Bearer token. Use `POST /auth/login` or `POST /auth/register` to obtain a token, then include it in the `Authorization` header:
+    ```
+    Authorization: Bearer <token>
+    ```
+  version: 1.0.0
+  contact:
+    name: Rocket Tasks
+    url: https://github.com/your-username/rocket-tasks
+
+security: []
+
+tags:
+  - name: Auth
+    description: Registration and authentication endpoints.
+  - name: Users
+    description: Manage the authenticated user's profile and account.
+  - name: Lists
+    description: Create and manage task lists.
+  - name: Tasks
+    description: Create and manage tasks within lists or standalone.
+
+paths:
+  /auth/register:
+    post:
+      summary: Register User
+      operationId: register
+      description: Creates a new user account and returns the newly created user information along with a JWT access token.
+      tags:
+        - Auth
+      requestBody:
+        $ref: '#/components/requestBodies/register_user'
+      responses:
+        '201':
+          description: User successfully registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+              example:
+                token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MGFmNjJhOC0zMzg0LTQwMmUtYTNlNC0yMDNiMzdjZjE4M2IiLCJpYXQiOjE3ODU1Mzc1ODMsImV4cCI6MTc4NjE0MjM4M30.xQW6ULnPV3KScNdxQZmCYCu1BaiivFEavF2cDVl1Ihs
+                user:
+                  id: 60af62a8-3384-402e-a3e4-203b37cf183b
+                  name: John Doe
+                  email: john@example.com
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /auth/login:
+    post:
+      summary: Authenticate User
+      operationId: login
+      description: Authenticates a user using their email and password. Returns a JWT access token that must be included in the Authorization header when accessing protected endpoints.
+      tags:
+        - Auth
+      requestBody:
+        $ref: '#/components/requestBodies/authenticate_user'
+      responses:
+        '200':
+          description: User authenticated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+              example:
+                token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MGFmNjJhOC0zMzg0LTQwMmUtYTNlNC0yMDNiMzdjZjE4M2IiLCJpYXQiOjE3ODU1Mzc1ODMsImV4cCI6MTc4NjE0MjM4M30.xQW6ULnPV3KScNdxQZmCYCu1BaiivFEavF2cDVl1Ihs
+                user:
+                  id: 60af62a8-3384-402e-a3e4-203b37cf183b
+                  name: John Doe
+                  email: john@example.com
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /users/me:
+    get:
+      summary: Get Current User
+      operationId: getMe
+      description: Returns the profile information of the authenticated user.
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User profile returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              example:
+                id: 60af62a8-3384-402e-a3e4-203b37cf183b
+                name: John Doe
+                email: john@example.com
+                avatarUrl: null
+                createdAt: '2026-07-01T10:00:00.000Z'
+                updatedAt: '2026-07-01T10:00:00.000Z'
+                _count:
+                  tasks: 5
+                  lists: 2
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    patch:
+      summary: Update Current User
+      operationId: updateMe
+      description: Updates the authenticated user's profile and returns the updated user information.
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/update_current_user'
+      responses:
+        '200':
+          description: User profile updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              example:
+                id: 60af62a8-3384-402e-a3e4-203b37cf183b
+                name: John Updated
+                email: john@example.com
+                avatarUrl: null
+                createdAt: '2026-07-01T10:00:00.000Z'
+                updatedAt: '2026-07-29T10:00:00.000Z'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    delete:
+      summary: Delete Account
+      operationId: deleteMe
+      description: Permanently deletes the authenticated user's account and all associated resources.
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      responses:
+        '204':
+          description: Account deleted successfully
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /users/me/password:
+    patch:
+      summary: Update Password
+      operationId: updateMyPassword
+      description: Changes the authenticated user's password after validating the current password.
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/update_password'
+      responses:
+        '204':
+          description: Password updated successfully
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /lists:
+    post:
+      summary: Create List
+      operationId: createList
+      description: Creates a new task list and returns the created list.
+      tags:
+        - Lists
+      security:
+        - bearerAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/create_list'
+      responses:
+        '201':
+          description: List created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/List'
+              example:
+                id: 67e6672e-dcf2-4852-9c70-3073d4a8bfbf
+                title: Work
+                description: Work related tasks
+                color: '#3b82f6'
+                createdAt: '2026-07-01T10:00:00.000Z'
+                updatedAt: '2026-07-01T10:00:00.000Z'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    get:
+      summary: List Lists
+      operationId: listLists
+      description: Returns all task lists belonging to the authenticated user.
+      tags:
+        - Lists
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Lists returned successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/List'
+              example:
+                - id: 67e6672e-dcf2-4852-9c70-3073d4a8bfbf
+                  title: Work
+                  description: Work related tasks
+                  color: '#3b82f6'
+                  createdAt: '2026-07-01T10:00:00.000Z'
+                  updatedAt: '2026-07-01T10:00:00.000Z'
+                  _count:
+                    tasks: 3
+                - id: 020f498b-a3e8-440e-9d0a-e647d60a08e6
+                  title: Personal
+                  description: null
+                  color: '#10b981'
+                  createdAt: '2026-07-02T10:00:00.000Z'
+                  updatedAt: '2026-07-02T10:00:00.000Z'
+                  _count:
+                    tasks: 5
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /lists/{id}:
+    patch:
+      summary: Update List
+      operationId: updateList
+      description: Updates the specified task list and returns the updated list.
+      tags:
+        - Lists
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: The unique identifier of the list
+          required: true
+          schema:
+            type: string
+            format: uuid
+          example: 67e6672e-dcf2-4852-9c70-3073d4a8bfbf
+      requestBody:
+        $ref: '#/components/requestBodies/update_list'
+      responses:
+        '200':
+          description: List updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/List'
+              example:
+                id: 67e6672e-dcf2-4852-9c70-3073d4a8bfbf
+                title: Work Updated
+                description: Work related tasks
+                color: '#3b82f6'
+                createdAt: '2026-07-01T10:00:00.000Z'
+                updatedAt: '2026-07-29T10:00:00.000Z'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    delete:
+      summary: Delete List
+      operationId: deleteList
+      description: Permanently deletes the specified task list and all associated tasks.
+      tags:
+        - Lists
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: The unique identifier of the list
+          required: true
+          schema:
+            type: string
+            format: uuid
+          example: 020f498b-a3e8-440e-9d0a-e647d60a08e6
+      responses:
+        '204':
+          description: List deleted successfully
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /tasks:
+    post:
+      summary: Create Task
+      operationId: createTask
+      description: Creates a new task and returns the created task. Optionally associates the task with a list.
+      tags:
+        - Tasks
+      security:
+        - bearerAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/create_task'
+      responses:
+        '201':
+          description: Task created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+              example:
+                id: 948f0c1c-617f-405a-a293-3dfa4725fc52
+                title: Review pull request
+                dueDate: '2026-08-01T00:00:00.000Z'
+                completed: false
+                createdAt: '2026-07-29T06:36:00.665Z'
+                updatedAt: '2026-07-29T06:36:00.665Z'
+                listId: 67e6672e-dcf2-4852-9c70-3073d4a8bfbf
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    get:
+      summary: List Tasks
+      operationId: listTasks
+      description: Returns a paginated list of tasks belonging to the authenticated user. Results can be filtered and sorted using query parameters.
+      tags:
+        - Tasks
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: completed
+          in: query
+          description: Filter tasks by completion status
+          required: false
+          schema:
+            type: boolean
+          example: false
+        - name: due
+          in: query
+          description: Filter tasks by due date category
+          required: false
+          schema:
+            type: string
+            enum:
+              - today
+              - upcoming
+              - past
+          example: upcoming
+        - name: listId
+          in: query
+          description: Filter tasks by list ID
+          required: false
+          schema:
+            type: string
+            format: uuid
+          example: 67e6672e-dcf2-4852-9c70-3073d4a8bfbf
+        - name: sortBy
+          in: query
+          description: Field to sort results by
+          required: false
+          schema:
+            type: string
+            enum:
+              - createdAt
+              - dueDate
+              - title
+            default: createdAt
+          example: dueDate
+        - name: sortOrder
+          in: query
+          description: Sort direction
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+            default: desc
+          example: asc
+        - name: page
+          in: query
+          description: Page number for pagination
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          example: 1
+        - name: limit
+          in: query
+          description: Number of tasks per page
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+          example: 20
+      responses:
+        '200':
+          description: Tasks returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTasks'
+              example:
+                data:
+                  - id: 948f0c1c-617f-405a-a293-3dfa4725fc52
+                    title: Review pull request
+                    dueDate: '2026-08-01T00:00:00.000Z'
+                    completed: false
+                    createdAt: '2026-07-29T06:36:00.665Z'
+                    updatedAt: '2026-07-29T06:36:00.665Z'
+                    listId: 67e6672e-dcf2-4852-9c70-3073d4a8bfbf
+                meta:
+                  page: 1
+                  limit: 20
+                  total: 1
+                  totalPages: 1
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /tasks/{id}:
+    get:
+      summary: Get Task
+      operationId: getTask
+      description: Returns the task that matches the provided identifier.
+      tags:
+        - Tasks
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: The unique identifier of the task
+          required: true
+          schema:
+            type: string
+            format: uuid
+          example: 948f0c1c-617f-405a-a293-3dfa4725fc52
+      responses:
+        '200':
+          description: Task returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+              example:
+                id: 948f0c1c-617f-405a-a293-3dfa4725fc52
+                title: Review pull request
+                dueDate: '2026-08-01T00:00:00.000Z'
+                completed: false
+                createdAt: '2026-07-29T06:36:00.665Z'
+                updatedAt: '2026-07-29T06:36:00.665Z'
+                listId: 67e6672e-dcf2-4852-9c70-3073d4a8bfbf
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    patch:
+      summary: Update Task
+      operationId: updateTask
+      description: Updates the specified task and returns the updated task.
+      tags:
+        - Tasks
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: The unique identifier of the task
+          required: true
+          schema:
+            type: string
+            format: uuid
+          example: 948f0c1c-617f-405a-a293-3dfa4725fc52
+      requestBody:
+        $ref: '#/components/requestBodies/update_task'
+      responses:
+        '200':
+          description: Task updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+              example:
+                id: 948f0c1c-617f-405a-a293-3dfa4725fc52
+                title: Review pull request - done
+                dueDate: '2026-08-01T00:00:00.000Z'
+                completed: true
+                createdAt: '2026-07-29T06:36:00.665Z'
+                updatedAt: '2026-07-30T10:00:00.000Z'
+                listId: 67e6672e-dcf2-4852-9c70-3073d4a8bfbf
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    delete:
+      summary: Delete Task
+      operationId: deleteTask
+      description: Permanently deletes the specified task.
+      tags:
+        - Tasks
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: The unique identifier of the task
+          required: true
+          schema:
+            type: string
+            format: uuid
+          example: 948f0c1c-617f-405a-a293-3dfa4725fc52
+      responses:
+        '204':
+          description: Task deleted successfully
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token obtained from /auth/login or /auth/register
+
+  schemas:
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          description: JWT access token valid for 7 days
+        user:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            name:
+              type: string
+            email:
+              type: string
+              format: email
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        avatarUrl:
+          type: string
+          format: uri
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        _count:
+          type: object
+          properties:
+            tasks:
+              type: integer
+            lists:
+              type: integer
+
+    List:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        color:
+          type: string
+          nullable: true
+          example: '#3b82f6'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        _count:
+          type: object
+          properties:
+            tasks:
+              type: integer
+
+    Task:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        dueDate:
+          type: string
+          format: date-time
+          nullable: true
+        completed:
+          type: boolean
+          default: false
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        listId:
+          type: string
+          format: uuid
+          nullable: true
+
+    PaginatedTasks:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Task'
+        meta:
+          type: object
+          properties:
+            page:
+              type: integer
+            limit:
+              type: integer
+            total:
+              type: integer
+            totalPages:
+              type: integer
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+
+    ValidationError:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+              message:
+                type: string
+              path:
+                type: array
+                items:
+                  type: string
+
+    register_user:
+      type: object
+      required:
+        - name
+        - email
+        - password
+      properties:
+        name:
+          type: string
+          minLength: 2
+          maxLength: 100
+        email:
+          type: string
+          format: email
+          maxLength: 255
+        password:
+          type: string
+          minLength: 6
+          maxLength: 72
+      example:
+        name: John Doe
+        email: john@example.com
+        password: SecurePass123
+
+    authenticate_user:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 1
+          maxLength: 72
+      example:
+        email: john@example.com
+        password: SecurePass123
+
+    create_list:
+      type: object
+      required:
+        - title
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 100
+        description:
+          type: string
+          maxLength: 255
+        color:
+          type: string
+          pattern: '^#[0-9a-f]{6}$'
+      example:
+        title: Work
+        description: Work related tasks
+        color: '#3b82f6'
+
+    update_list:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 100
+        description:
+          type: string
+          maxLength: 255
+        color:
+          type: string
+          pattern: '^#[0-9a-f]{6}$'
+      example:
+        title: Work Updated
+        color: '#ef4444'
+
+    create_task:
+      type: object
+      required:
+        - title
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 100
+        dueDate:
+          type: string
+          format: date-time
+        listId:
+          type: string
+          format: uuid
+      example:
+        title: Review pull request
+        dueDate: '2026-08-01T00:00:00.000Z'
+        listId: 67e6672e-dcf2-4852-9c70-3073d4a8bfbf
+
+    update_task:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 100
+        completed:
+          type: boolean
+        dueDate:
+          type: string
+          format: date-time
+        listId:
+          type: string
+          format: uuid
+          nullable: true
+      example:
+        title: Review pull request
+        completed: true
+
+    update_current_user:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 2
+          maxLength: 100
+        avatarUrl:
+          type: string
+          format: uri
+      example:
+        name: John Updated
+
+    update_password:
+      type: object
+      required:
+        - currentPassword
+        - newPassword
+      properties:
+        currentPassword:
+          type: string
+          minLength: 1
+          maxLength: 72
+        newPassword:
+          type: string
+          minLength: 6
+          maxLength: 72
+      example:
+        currentPassword: SecurePass123
+        newPassword: NewSecurePass456
+
+  requestBodies:
+    register_user:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/register_user'
+      required: true
+
+    authenticate_user:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/authenticate_user'
+      required: true
+
+    create_list:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/create_list'
+      required: true
+
+    update_list:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/update_list'
+      required: true
+
+    create_task:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/create_task'
+      required: true
+
+    update_task:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/update_task'
+      required: true
+
+    update_current_user:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/update_current_user'
+      required: true
+
+    update_password:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/update_password'
+      required: true
+
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            message: Token not provided
+
+    NotFound:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            message: Resource not found
+
+    Conflict:
+      description: Conflict
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            message: Email already registered
+
+    UnprocessableEntity:
+      description: Unprocessable Entity
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidationError'
+          example:
+            errors:
+              - code: invalid_format
+                message: Invalid email address
+                path:
+                  - email
+
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            message: Internal server error
