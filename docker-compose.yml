@@ -30,6 +30,7 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
       JWT_SECRET: ${JWT_SECRET}
       SALT_ROUNDS: ${SALT_ROUNDS}
+      FRONTEND_PORT: ${FRONTEND_PORT}
     depends_on:
       - postgres
 
