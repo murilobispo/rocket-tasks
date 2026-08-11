@@ -392,8 +392,12 @@ paths:
           description: Filter tasks by list ID
           required: false
           schema:
-            type: string
-            format: uuid
+            oneOf:
+              - type: string
+                format: uuid
+              - type: string
+                enum:
+                  - "null"
           example: 67e6672e-dcf2-4852-9c70-3073d4a8bfbf
         - name: sortBy
           in: query
@@ -855,6 +859,7 @@ components:
         avatarUrl:
           type: string
           format: uri
+          nullable: true
       example:
         name: John Updated
 

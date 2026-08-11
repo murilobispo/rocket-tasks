@@ -1,6 +1,7 @@
 services:
   postgres:
     image: postgres:17
+    restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -12,6 +13,7 @@ services:
 
   cloudbeaver:
     image: dbeaver/cloudbeaver:latest
+    restart: unless-stopped
     ports:
       - "${CLOUDBEAVER_PORT}:8978"
     volumes:
@@ -23,6 +25,7 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
+    restart: unless-stopped
     ports:
       - "${SERVER_PORT}:${SERVER_PORT}"
     environment:
