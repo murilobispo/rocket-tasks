@@ -14,7 +14,7 @@ import { normalizeErrors } from '@/utils/normalizeErrors'
 type AuthPageSection = 'login' | 'register'
 
 interface Props {
-	initSection: AuthPageSection
+	initSection?: AuthPageSection
 }
 	
 function AuthPage({ initSection = 'login' }: Props) {
@@ -111,7 +111,7 @@ function AuthPage({ initSection = 'login' }: Props) {
 	}, [])
 
 	return(
-    <div className='min-h-screen flex items-center justify-center from-background p-4'>
+    <div className='min-h-screen flex items-center justify-center p-4'>
 			<Card className='mx-auto w-full max-w-md gap-4'>
 
 				<CardHeader className='items-center text-center'>
@@ -130,7 +130,7 @@ function AuthPage({ initSection = 'login' }: Props) {
 									<FieldLabel htmlFor='name'>Name</FieldLabel>
 									<Input id='name' type='text' placeholder='John Doe' required value={name} aria-invalid={!!fieldErrors.name} 
 										onChange={(e) => {
-											setEmail(e.target.value)
+											setName(e.target.value)
 											clearError('name')
 										}}
 									/>
@@ -151,7 +151,7 @@ function AuthPage({ initSection = 'login' }: Props) {
 								<FieldLabel htmlFor='password'>Password</FieldLabel>
               	<Input id='password' type='password' placeholder='••••••••' required value={password} aria-invalid={!!fieldErrors.password} 
 									onChange={(e) => {
-										setEmail(e.target.value)
+										setPassword(e.target.value)
 										clearError('password')
 									}}
 								/>

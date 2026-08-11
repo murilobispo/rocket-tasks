@@ -1,10 +1,9 @@
 import { createBrowserRouter} from 'react-router'
 import AuthPage from '@/pages/Auth'
 import { authMiddleware } from '@/routes/authMiddleware'
-import Home from '@/pages/Home'
 import AppLayout from '@/components/layout/appLayout'
-import { appLoader } from './loaders/appLoader'
 import ErrorPage from '@/pages/Error'
+import { appLoader } from './loaders/appLoader'
 
 export const routes = createBrowserRouter([
   {
@@ -16,8 +15,20 @@ export const routes = createBrowserRouter([
     children: [
       {
         index: true,
-        Component: Home
-      }
+        element: <h1>Inbox h1</h1>
+      },
+      {
+        path: 'today',
+        element: <h1>today h1</h1>
+      },
+      {
+        path: 'upcoming',
+        element: <h1>upcoming h1</h1>
+      },
+      {
+        path: 'completed',
+        element: <h1>completed h1</h1>
+      },
     ]
   },
   {
