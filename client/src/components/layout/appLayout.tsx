@@ -37,15 +37,29 @@ import {
   AvatarImage,
 } from '@/components/ui/avatar'
 
-import { NavLink, Outlet, useLoaderData } from 'react-router'
+import { NavLink, Outlet, useLoaderData, useMatches } from 'react-router'
 import { useSidebarData } from '@/hooks/useSidebarData'
-import { Calendar, CalendarClock, CircleCheck, CircleSmall, Inbox, Plus, Rocket, User, Settings, LogOut, Pencil} from 'lucide-react'
+import { Calendar, CalendarClock, CircleCheck, CircleSmall, Inbox, Plus, Rocket, User, Settings, LogOut, Pencil, Moon, Sun} from 'lucide-react'
 import type { appLoader } from '@/routes/loaders/appLoader'
+import { Separator } from '@/components/ui/separator'
+import type { RouteHandle } from '@/types/routeHandle'
+import { Button } from "@/components/ui/button"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
+import { useTheme } from "@/components/theme-provider"
 
 function AppLayout() {
 
   const { user } = useLoaderData<typeof appLoader>()
-
+  const matches = useMatches()
+  const match = matches.at(-1)
+  const handle = match?.handle as RouteHandle | undefined
+  const title = handle?.title || 'Rocket Tasks'
+  const { theme, setTheme } = useTheme()
+  
    const [
     { data: lists },
     { data: inbox },
@@ -86,7 +100,7 @@ function AppLayout() {
               <SidebarMenu>
                 {OVERVIEW_MENU_ITEMS.map((item) =>(
                   <SidebarMenuItem key={item.label}>
-                  <SidebarMenuButton tooltip={{ children: item.label, className:'bg-primary'} } render={<NavLink to={item.to}/>}>
+                  <SidebarMenuButton tooltip={{ children: item.label } } render={<NavLink to={item.to}/>}>
                       {item.icon}
                       {item.label}
                       </SidebarMenuButton>
@@ -104,7 +118,7 @@ function AppLayout() {
               <SidebarMenu>
                 {lists.map((list) =>(
                   <SidebarMenuItem key={list.id}>
-                    <SidebarMenuButton tooltip={{ children: list.title, className:'bg-primary'}} render={<NavLink to={`list/${list.id}`} />}>
+                    <SidebarMenuButton tooltip={{ children: list.title }} render={<NavLink to={`list/${list.id}`} />}>
                       <CircleSmall
                         className='fill-current'
                         style={{
@@ -163,8 +177,23 @@ function AppLayout() {
       </Sidebar>
 
       <SidebarInset>
-        <header className='flex h-12 items-center border-b px-4'>
-          <SidebarTrigger />
+        <header className='sticky top-0 z-10 flex h-12 items-center justify-between border-b bg-background/80 px-4 backdrop-blur'>
+          <div className='flex items-center gap-2'>
+            <SidebarTrigger />
+            <Separator orientation='vertical' className='h-5' />
+            <h1 className='text-sm font-semibold'>{title}</h1>
+          </div>
+          <div className='flex items-center gap-2'>
+            <Tooltip>
+              <TooltipTrigger render={
+                <Button variant='ghost' size='icon' onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
+                  {theme === 'dark' ? <Sun className='h-4 w-4' /> : <Moon className='h-4 w-4' />}
+                </Button>
+              }>
+              </TooltipTrigger>
+              <TooltipContent>Toggle theme</TooltipContent>
+            </Tooltip>
+          </div>
         </header>
         <Outlet />
       </SidebarInset>
