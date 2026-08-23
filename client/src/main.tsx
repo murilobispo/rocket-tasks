@@ -3,7 +3,6 @@ import { createRoot } from 'react-dom/client'
 import { RouterProvider } from 'react-router'
 import { ThemeProvider } from '@/components/theme-provider'
 import '@/index.css'
-
 import { routes } from '@/routes'
 
 import { Toaster } from '@/components/ui/sonner'

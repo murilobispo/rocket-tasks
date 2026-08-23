@@ -39,7 +39,7 @@ import {
 
 import { NavLink, Outlet, useLoaderData, useMatches } from 'react-router'
 import { useSidebarData } from '@/hooks/useSidebarData'
-import { Calendar, CalendarClock, CircleCheck, CircleSmall, Inbox, Plus, Rocket, User, Settings, LogOut, Pencil, Moon, Sun} from 'lucide-react'
+import { Calendar, CalendarClock, CircleCheck, CircleSmall, Inbox, Plus, Rocket, User, Settings, LogOut, Pencil, Moon, Sun, Trash} from 'lucide-react'
 import type { appLoader } from '@/routes/loaders/appLoader'
 import { Separator } from '@/components/ui/separator'
 import type { RouteHandle } from '@/types/routeHandle'
@@ -49,7 +49,9 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+
 import { useTheme } from "@/components/theme-provider"
+import { ListDialog } from '@/components/ListDialog'
 
 function AppLayout() {
 
@@ -126,9 +128,21 @@ function AppLayout() {
                         }}
                       />
                       {list.title}
-                      </SidebarMenuButton>
-                    <SidebarMenuAction showOnHover={true} onClick={() => alert(`Editar ${list.title}`)}>
-                      <Pencil/>
+                    </SidebarMenuButton>
+                    <SidebarMenuAction showOnHover={true} >
+                      <DropdownMenu>
+                        <DropdownMenuTrigger className='cursor-pointer'>
+                          <Pencil className='h-4 w-4' />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent side='right' align='start'>
+                          <DropdownMenuItem>  
+                            <Pencil /> Edit
+                          </DropdownMenuItem>
+                          <DropdownMenuItem variant='destructive'>
+                            <Trash /> Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </SidebarMenuAction>
                   </SidebarMenuItem>
                 ))}
