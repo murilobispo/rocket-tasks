@@ -77,6 +77,10 @@ function AuthPage({ initSection = 'login' }: Props) {
 				setFieldErrors(errors)
 				return
 			}
+			if (isAxiosError(error) && error.response?.status === 401) {
+				toast.error(error.response.data.message)
+				return
+			}
 		} finally {
 			setIsFetching(false)
 		}
@@ -110,6 +114,16 @@ function AuthPage({ initSection = 'login' }: Props) {
 		})
 	}, [])
 
+	const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+			e.preventDefault()
+
+		if (section === 'login') {
+			handleLogin()
+		} else {
+			handleRegister()
+		}
+	}
+
 	return(
     <div className='min-h-screen flex items-center justify-center p-4'>
 			<Card className='mx-auto w-full max-w-md gap-4'>
@@ -123,43 +137,52 @@ function AuthPage({ initSection = 'login' }: Props) {
 				</CardHeader>
 
 				<CardContent className='space-y-3'>
-					<FieldSet  disabled={isFetching }>
-						<FieldGroup>
-							{section !== 'login' &&(
-								<Field  data-invalid={!!fieldErrors.name}>
-									<FieldLabel htmlFor='name'>Name</FieldLabel>
-									<Input id='name' type='text' placeholder='John Doe' required value={name} aria-invalid={!!fieldErrors.name} 
+					<form onSubmit={handleSubmit} className='space-y-3'>
+						<FieldSet  disabled={isFetching }>
+							<FieldGroup>
+								{section !== 'login' &&(
+									<Field  data-invalid={!!fieldErrors.name}>
+										<FieldLabel htmlFor='name'>Name</FieldLabel>
+										<Input id='name' type='text' placeholder='John Doe' required value={name} aria-invalid={!!fieldErrors.name} 
+											onChange={(e) => {
+												setName(e.target.value)
+												clearError('name')
+											}}
+										/>
+										<FieldError>{fieldErrors.name}</FieldError>
+									</Field>
+								)}
+								<Field  data-invalid={!!fieldErrors.email}>
+									<FieldLabel htmlFor='email'>Email</FieldLabel>
+									<Input id='email' type='email' placeholder='you@example.com' required value={email} aria-invalid={!!fieldErrors.email} 
 										onChange={(e) => {
-											setName(e.target.value)
-											clearError('name')
+											setEmail(e.target.value)
+											clearError('email')
 										}}
 									/>
-									<FieldError>{fieldErrors.name}</FieldError>
+									<FieldError>{fieldErrors.email}</FieldError>
 								</Field>
-							)}
-							<Field  data-invalid={!!fieldErrors.email}>
-								<FieldLabel htmlFor='email'>Email</FieldLabel>
-								<Input id='email' type='email' placeholder='you@example.com' required value={email} aria-invalid={!!fieldErrors.email} 
-									onChange={(e) => {
-										setEmail(e.target.value)
-										clearError('email')
-									}}
-								/>
-								<FieldError>{fieldErrors.email}</FieldError>
-							</Field>
-							<Field  data-invalid={!!fieldErrors.password}>
-								<FieldLabel htmlFor='password'>Password</FieldLabel>
-              	<Input id='password' type='password' placeholder='••••••••' required value={password} aria-invalid={!!fieldErrors.password} 
-									onChange={(e) => {
-										setPassword(e.target.value)
-										clearError('password')
-									}}
-								/>
-								<FieldError>{fieldErrors.password}</FieldError>
-							</Field>
-						</FieldGroup>
-					</FieldSet>
-					<Button onClick={section === 'login' ? handleLogin : handleRegister} className={'w-full'} size={'lg'} disabled={isFetching || !isFormValid()}>{section === 'login' ? 'Sign in' : 'Create account'}</Button>
+								<Field  data-invalid={!!fieldErrors.password}>
+									<FieldLabel htmlFor='password'>Password</FieldLabel>
+									<Input id='password' type='password' placeholder='••••••••' required value={password} aria-invalid={!!fieldErrors.password} 
+										onChange={(e) => {
+											setPassword(e.target.value)
+											clearError('password')
+										}}
+									/>
+									<FieldError>{fieldErrors.password}</FieldError>
+								</Field>
+							</FieldGroup>
+						</FieldSet>
+						<Button
+							type='submit'
+							className='w-full'
+							size='lg'
+							disabled={isFetching || !isFormValid()}
+						>
+							{section === 'login' ? 'Sign in' : 'Create account'}
+						</Button>
+					</form>
 				</CardContent>
 
 				<CardFooter className='flex justify-center text-center'>

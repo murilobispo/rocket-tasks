@@ -5,6 +5,7 @@ import AppLayout from '@/components/layout/appLayout'
 import ErrorPage from '@/pages/Error'
 import { appLoader } from './loaders/appLoader'
 import type { RouteHandle } from '@/types/routeHandle'
+import ListPage from '@/pages/List'
 
 export const routes = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ export const routes = createBrowserRouter([
         handle: {
           title: 'Completed',
         } satisfies RouteHandle
+      },
+      {
+        path: 'list/:id',
+        Component: ListPage
       }
     ]
   },

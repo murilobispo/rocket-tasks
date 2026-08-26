@@ -25,10 +25,14 @@ import {
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 
-import { ColorPicker } from '@/components/ColorPicker'
+import { ColorPicker } from '@/components/common/ColorPicker'
 import { LIST_COLORS } from '@/constants/listColors'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { createList } from '@/services/api/lists'
+import { toast } from 'sonner'
+import { useNavigate } from 'react-router'
+import { queryClient } from '@/lib/queryClient'
 
 interface Props {
   variant: 'create' | 'edit'
@@ -36,18 +40,59 @@ interface Props {
 }
 
 export function ListDialog({ variant, trigger }: Props) {
-
-  const [open, setOpen] = useState(false)
+	
+	const navigate = useNavigate()
+	const [open, setOpen] = useState(false)
 	const dialogTitle = variant === 'create' ? 'Create a new list' : 'Edit list'
 	const submitLabel = variant === 'create' ? 'Create List' : 'Save changes'
+	const [isSubmitting, setIsSubmitting] = useState(false)
 
-	const [color, setColor] = useState(LIST_COLORS[0])
 	const [title, setTitle] = useState('')
+	const [color, setColor] = useState(LIST_COLORS[0])
 	const [description, setDescription] = useState('')
 
+	const clearFields = () =>{
+		setTitle('')
+		setColor(LIST_COLORS[0])
+		setDescription('')
+	}
+
+	const handleSubmit = async () => {
+		setIsSubmitting(true)
+
+		try {
+			if (variant === 'create') {
+				await handleCreateList()
+			} else if (variant === 'edit') {
+				await handleEditList()
+			}
+		} finally {
+			setIsSubmitting(false)
+		}
+	}
+
+	const handleEditList = async () => {
+		console.log('edit list')
+	}
+
+	const handleCreateList = async () => {
+		try {
+			const list = await createList(title, color, description)
+			toast.success('Lista criada com sucesso!')
+			await queryClient.invalidateQueries({ queryKey: ['lists'] })
+			setOpen(false)
+			navigate(`/list/${list.id}`)
+		} catch ( error ){
+    	toast.error('Não foi possível criar a lista.')			
+		} 
+	}
+
 	return (
-		<Dialog open={open} >
-			 <DialogTrigger>
+		<Dialog open={open} onOpenChange={(o) => {
+			setOpen(o)
+			clearFields()
+		}}>
+			<DialogTrigger>
         {trigger}
       </DialogTrigger>
 			<DialogContent>
@@ -77,7 +122,6 @@ export function ListDialog({ variant, trigger }: Props) {
 								maxLength={255} 
 								className='max-h-48' 
 							/>
-							<p>{description}</p>
 						</Field>
 						<Field>
 							<FieldLabel>Color</FieldLabel>
@@ -85,13 +129,12 @@ export function ListDialog({ variant, trigger }: Props) {
 								value={color}
 								onChange={setColor}
 							/>
-							<p>{color}</p>
 						</Field>
 					</FieldGroup>
 				</FieldSet>
 				<DialogFooter>
 					<DialogClose render={<Button variant='ghost'>Cancel</Button>}/>
-					<Button disabled={!title.trim()}>
+					<Button onClick={handleSubmit} disabled={isSubmitting || !title.trim()}>
             {submitLabel}
           </Button>
 				</DialogFooter>

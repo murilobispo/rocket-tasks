@@ -51,7 +51,10 @@ import {
 } from "@/components/ui/tooltip"
 
 import { useTheme } from "@/components/theme-provider"
-import { ListDialog } from '@/components/ListDialog'
+import { removeToken } from '@/services/auth/storage'
+import { useNavigate } from 'react-router'
+import { deleteList } from '@/services/api/lists'
+import { ListDialog } from '@/components/common/ListDialog'
 
 function AppLayout() {
 
@@ -62,7 +65,7 @@ function AppLayout() {
   const title = handle?.title || 'Rocket Tasks'
   const { theme, setTheme } = useTheme()
   
-   const [
+  const [
     { data: lists },
     { data: inbox },
     { data: today },
@@ -76,6 +79,8 @@ function AppLayout() {
     { label: 'Upcoming',  icon: <CalendarClock/>, to: '/upcoming',  badge: upcoming.meta.total  },
     { label: 'Completed', icon: <CircleCheck/>,   to: '/completed', badge: completed.meta.total }
   ]
+
+  const navigate = useNavigate()
   
   return (
     <SidebarProvider>
@@ -115,7 +120,14 @@ function AppLayout() {
 
           <SidebarGroup>
             <SidebarGroupLabel>Lists</SidebarGroupLabel>
-            <SidebarGroupAction onClick={() => console.log('Click')}><Plus/></SidebarGroupAction>
+            <ListDialog
+              variant='create'
+              trigger={
+                <SidebarGroupAction>
+                  <Plus />
+                </SidebarGroupAction>
+              }
+            />
             <SidebarGroupContent>
               <SidebarMenu>
                 {lists.map((list) =>(
@@ -178,7 +190,12 @@ function AppLayout() {
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator/>
                   <DropdownMenuGroup>
-                    <DropdownMenuItem variant={'destructive'}>
+                    <DropdownMenuItem 
+                      variant={'destructive'} 
+                      onClick={() => {
+                        removeToken()
+                        navigate('/login')
+                      }}>
                       <LogOut/>Log out
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
