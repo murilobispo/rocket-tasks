@@ -53,8 +53,9 @@ import {
 import { useTheme } from "@/components/theme-provider"
 import { removeToken } from '@/services/auth/storage'
 import { useNavigate } from 'react-router'
-import { deleteList } from '@/services/api/lists'
-import { ListDialog } from '@/components/common/ListDialog'
+
+import { CreateListDialog } from '@/components/common/CreateListDialog'
+import { DeleteListDialog } from '@/components/common/DeleteListDialog'
 
 function AppLayout() {
 
@@ -120,8 +121,7 @@ function AppLayout() {
 
           <SidebarGroup>
             <SidebarGroupLabel>Lists</SidebarGroupLabel>
-            <ListDialog
-              variant='create'
+            <CreateListDialog
               trigger={
                 <SidebarGroupAction>
                   <Plus />
@@ -147,12 +147,16 @@ function AppLayout() {
                           <Pencil className='h-4 w-4' />
                         </DropdownMenuTrigger>
                         <DropdownMenuContent side='right' align='start'>
-                          <DropdownMenuItem>  
+                          <DropdownMenuItem>
                             <Pencil /> Edit
                           </DropdownMenuItem>
-                          <DropdownMenuItem variant='destructive'>
-                            <Trash /> Delete
-                          </DropdownMenuItem>
+                          <DeleteListDialog
+                            listId={list.id}
+                            trigger={
+                              <DropdownMenuItem variant='destructive' closeOnClick={false}>
+                                <Trash /> Delete
+                              </DropdownMenuItem>
+                            }/>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </SidebarMenuAction>

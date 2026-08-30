@@ -15,6 +15,14 @@ export async function getLists(): Promise<List[]> {
 	return data
 }
 
+export async function updateList(id: string, title?: string, color?: string, description?: string): Promise<List> {
+	const { data } = await apiClient.patch(
+		`/lists/${id}`,
+		{ title, color, description }
+	)
+	return data
+}
+
 export async function deleteList(id: string): Promise<void> {
 	await apiClient.delete(`/lists/${id}`)
 }
