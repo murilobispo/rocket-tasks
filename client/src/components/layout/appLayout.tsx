@@ -37,12 +37,11 @@ import {
   AvatarImage,
 } from '@/components/ui/avatar'
 
-import { NavLink, Outlet, useLoaderData, useMatches } from 'react-router'
+import { NavLink, Outlet, useLoaderData} from 'react-router'
 import { useSidebarData } from '@/hooks/useSidebarData'
 import { Calendar, CalendarClock, CircleCheck, CircleSmall, Inbox, Plus, Rocket, User, Settings, LogOut, Pencil, Moon, Sun, Trash} from 'lucide-react'
 import type { appLoader } from '@/routes/loaders/appLoader'
 import { Separator } from '@/components/ui/separator'
-import type { RouteHandle } from '@/types/routeHandle'
 import { Button } from "@/components/ui/button"
 import {
   Tooltip,
@@ -63,10 +62,6 @@ import type { List } from '@/types/list'
 function AppLayout() {
 
   const { user } = useLoaderData<typeof appLoader>()
-  const matches = useMatches()
-  const match = matches.at(-1)
-  const handle = match?.handle as RouteHandle | undefined
-  const title = handle?.title || 'Rocket Tasks'
   const { theme, setTheme } = useTheme()
 
   const [editDialog, setEditDialog] = useState(false)
@@ -100,7 +95,7 @@ function AppLayout() {
                 <div className='flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary'>
                   <Rocket size={16} />
                 </div>
-                <h1 className='font-semibold tracking-tight text-lg'>Rocket Tasks</h1>
+                <h1 className='font-semibold tracking-tight text-xl'>Rocket Tasks</h1>
             </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
@@ -186,13 +181,13 @@ function AppLayout() {
             <SidebarMenuItem>
               <DropdownMenu>
                 <SidebarMenuButton size='lg' render={<DropdownMenuTrigger/>} className='cursor-pointer'>
-                  <Avatar>
+                  <Avatar size='lg'>
                     <AvatarImage src={user.avatarUrl ?? ''} />
                     <AvatarFallback>{user.name[0]}</AvatarFallback>
                   </Avatar>
                   <div className='min-w-0 text-left leading-tight'>
-                    <p className='truncate text-sm font-medium'>{user.name ?? 'Unnamed'}</p>
-                    <p className='truncate text-xs text-muted-foreground'>{user.email}</p>
+                    <p className='truncate text-base font-medium'>{user.name ?? 'Unnamed'}</p>
+                    <p className='truncate text-sm text-muted-foreground'>{user.email}</p>
                   </div>
                 </SidebarMenuButton>
                 <DropdownMenuContent>
@@ -225,25 +220,22 @@ function AppLayout() {
       </Sidebar>
 
       <SidebarInset>
-        <header className='sticky top-0 z-10 flex h-12 items-center justify-between border-b bg-background/80 px-4 backdrop-blur'>
-          <div className='flex items-center gap-2'>
-            <SidebarTrigger />
-            <Separator orientation='vertical' className='h-5' />
-            <h1 className='text-sm font-semibold'>{title}</h1>
-          </div>
-          <div className='flex items-center gap-2'>
-            <Tooltip>
-              <TooltipTrigger render={
-                <Button variant='ghost' size='icon' onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
-                  {theme === 'dark' ? <Sun className='h-4 w-4' /> : <Moon className='h-4 w-4' />}
-                </Button>
-              }>
-              </TooltipTrigger>
-              <TooltipContent>Toggle theme</TooltipContent>
-            </Tooltip>
-          </div>
+        <header className='sticky top-0 z-10 flex  gap-2 h-12 items-center justify-between bg-background/80 px-4 backdrop-blur'>
+          <SidebarTrigger />
+          <Tooltip>
+            <TooltipTrigger render={
+              <Button variant='ghost' size='icon' onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
+                {theme === 'dark' ? <Sun className='size-4' /> : <Moon className='size-4' />}
+              </Button>
+            }>
+            </TooltipTrigger>
+            <TooltipContent>Toggle theme</TooltipContent>
+          </Tooltip>
         </header>
-        <Outlet />
+        
+        <main className='mx-auto w-full max-w-4xl space-y-6 px-4 py-8 pb-24'>
+          <Outlet />
+        </main>
       </SidebarInset>
 
     

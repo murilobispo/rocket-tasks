@@ -11,7 +11,7 @@ export function useSidebarData() {
         queryFn: getLists,
       },
 			{
-        queryKey: ['tasks', 'inbox'],
+        queryKey: ['tasks', 'inbox', 'count'],
         queryFn: () =>
           getTasks({
             limit: 1,
@@ -19,7 +19,7 @@ export function useSidebarData() {
           }),
       },
       {
-        queryKey: ['tasks', 'today'],
+        queryKey: ['tasks', 'today', 'count'],
         queryFn: () =>
           getTasks({
             due: 'today',
@@ -27,7 +27,7 @@ export function useSidebarData() {
           }),
       },
       {
-        queryKey: ['tasks', 'upcoming'],
+        queryKey: ['tasks', 'upcoming', 'count'],
         queryFn: () =>
           getTasks({
             due: 'upcoming',
@@ -35,7 +35,7 @@ export function useSidebarData() {
           }),
       },
       {
-        queryKey: ['tasks', 'completed'],
+        queryKey: ['tasks', 'completed', 'count'],
         queryFn: () =>
           getTasks({
             completed: true,
