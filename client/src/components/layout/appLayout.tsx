@@ -56,6 +56,9 @@ import { useNavigate } from 'react-router'
 
 import { CreateListDialog } from '@/components/common/CreateListDialog'
 import { DeleteListDialog } from '@/components/common/DeleteListDialog'
+import { EditListDialog } from '@/components/common/EditListDialog'
+import { useState } from 'react'
+import type { List } from '@/types/list'
 
 function AppLayout() {
 
@@ -65,7 +68,10 @@ function AppLayout() {
   const handle = match?.handle as RouteHandle | undefined
   const title = handle?.title || 'Rocket Tasks'
   const { theme, setTheme } = useTheme()
-  
+
+  const [editDialog, setEditDialog] = useState(false)
+  const [selectedList, setSelectedList] = useState<List | null>(null)
+
   const [
     { data: lists },
     { data: inbox },
@@ -141,13 +147,20 @@ function AppLayout() {
                       />
                       {list.title}
                     </SidebarMenuButton>
-                    <SidebarMenuAction showOnHover={true} >
+                    <SidebarMenuAction
+                        showOnHover
+                        render={<div />}
+                      >
                       <DropdownMenu>
                         <DropdownMenuTrigger className='cursor-pointer'>
                           <Pencil className='h-4 w-4' />
                         </DropdownMenuTrigger>
                         <DropdownMenuContent side='right' align='start'>
-                          <DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => {
+                            setSelectedList(list)
+                            setEditDialog(true)
+                          }
+                          }>
                             <Pencil /> Edit
                           </DropdownMenuItem>
                           <DeleteListDialog
@@ -232,6 +245,16 @@ function AppLayout() {
         </header>
         <Outlet />
       </SidebarInset>
+
+    
+      {selectedList && (
+        <EditListDialog
+          list={selectedList}
+          open={editDialog}
+          onOpenChange={setEditDialog}
+        />
+      )}
+
     </SidebarProvider>
   )
 }

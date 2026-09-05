@@ -38,7 +38,7 @@ import { isAxiosError } from 'axios'
 import { normalizeErrors } from '@/utils/normalizeErrors'
 
 interface Props {
-  trigger: React.ReactNode
+  trigger: React.ReactElement
 }
 
 export function CreateListDialog({ trigger }: Props) {
@@ -54,11 +54,11 @@ export function CreateListDialog({ trigger }: Props) {
 	const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
 	
 	const clearError = (key: string) => {
-  setFieldErrors((prev) => ({
-    ...prev,
-    [key]: '',
-  }))
-}
+		setFieldErrors((prev) => ({
+			...prev,
+			[key]: '',
+		}))
+	}
 
 	const clearFields = () =>{
 		setTitle('')
@@ -100,9 +100,7 @@ export function CreateListDialog({ trigger }: Props) {
 			setOpen(o)
 			clearFields()
 		}}>
-			<DialogTrigger className={'w-full'}>
-        {trigger}
-      </DialogTrigger>
+			<DialogTrigger nativeButton={false} render={trigger}/>
 			<DialogContent>
 				<DialogHeader>
           <DialogTitle>{'Create a new list'}</DialogTitle>

@@ -7,4 +7,4 @@ export const LIST_COLORS = [
   '#ef4444', // red
   '#14b8a6', // teal
   '#64748b' // slate
-];
+]

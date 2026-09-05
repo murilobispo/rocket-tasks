@@ -23,7 +23,7 @@ import { useParams } from 'react-router'
 import { useNavigate } from 'react-router'
 
 interface Props {
-	trigger: React.ReactNode
+	trigger: React.ReactElement
 	listId: string
 }
 
@@ -61,9 +61,7 @@ export function DeleteListDialog({ trigger, listId}:Props){
 
 	return (
 		<AlertDialog open={open} onOpenChange={setOpen}>
-			<AlertDialogTrigger className={'w-full'}>
-				{trigger}
-			</AlertDialogTrigger>
+			<AlertDialogTrigger render={trigger}/>
 			<AlertDialogContent >
 				<AlertDialogHeader>
 					 <AlertDialogMedia className='bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive'>
