@@ -2,6 +2,7 @@ import { SubHeader } from '@/components/common/SubHeader'
 
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { getTasks } from '@/services/api/tasks'
+import { TaskList } from '@/components/common/TaskList'
 
 function CompletedPage() {
 	const { data } = useSuspenseQuery({
@@ -17,13 +18,11 @@ function CompletedPage() {
 			<SubHeader
 				title='Completed'
 				subtitle="Tasks you've already finished"
-				onClick={() => console.log('test')}
 			/>
-			{data.data.map((task) => (
-				<div key={task.id}>
-					{task.title}
-				</div>
-			))}
+			<TaskList 
+				tasks={data.data} 
+				emptyLabel='Nothing completed yet.'
+			/>
 		</>
 	)
 }

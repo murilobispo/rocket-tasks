@@ -100,7 +100,7 @@ export function CreateListDialog({ trigger }: Props) {
 			setOpen(o)
 			clearFields()
 		}}>
-			<DialogTrigger nativeButton={false} render={trigger}/>
+			<DialogTrigger render={trigger}/>
 			<DialogContent>
 				<DialogHeader>
           <DialogTitle>{'Create a new list'}</DialogTitle>

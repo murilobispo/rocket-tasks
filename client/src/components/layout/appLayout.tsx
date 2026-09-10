@@ -109,7 +109,7 @@ function AppLayout() {
               <SidebarMenu>
                 {OVERVIEW_MENU_ITEMS.map((item) =>(
                   <SidebarMenuItem key={item.label}>
-                  <SidebarMenuButton tooltip={{ children: item.label } } render={<NavLink to={item.to}/>}>
+                  <SidebarMenuButton tooltip={{ children: item.label }} render={<NavLink to={item.to}/>}>
                       {item.icon}
                       {item.label}
                       </SidebarMenuButton>
@@ -181,13 +181,13 @@ function AppLayout() {
             <SidebarMenuItem>
               <DropdownMenu>
                 <SidebarMenuButton size='lg' render={<DropdownMenuTrigger/>} className='cursor-pointer'>
-                  <Avatar size='lg'>
+                  <Avatar>
                     <AvatarImage src={user.avatarUrl ?? ''} />
                     <AvatarFallback>{user.name[0]}</AvatarFallback>
                   </Avatar>
                   <div className='min-w-0 text-left leading-tight'>
-                    <p className='truncate text-base font-medium'>{user.name ?? 'Unnamed'}</p>
-                    <p className='truncate text-sm text-muted-foreground'>{user.email}</p>
+                    <p className='truncate text-sm font-medium'>{user.name ?? 'Unnamed'}</p>
+                    <p className='truncate text-xs text-muted-foreground'>{user.email}</p>
                   </div>
                 </SidebarMenuButton>
                 <DropdownMenuContent>

@@ -1,16 +1,14 @@
 import { apiClient } from '@/services/api/client'
 import type { PaginatedResponse } from '@/types/paginated'
-import type { Task } from '@/types/task'
+import type { Task, GetTasksParams, UpdateTaskData } from '@/types/task'
 
-
-export interface GetTasksParams {
-  completed?: boolean
-  due?: 'today' | 'upcoming' | 'past'
-  listId?: string | 'null'
-  sortBy?: 'createdAt' | 'dueDate' | 'title'
-  sortOrder?: 'asc' | 'desc'
-  page?: number
-  limit?: number 
+export async function createTask(title: string, dueDate: string | undefined, listId: string | undefined): Promise<Task> {
+  const response = await apiClient.post(
+    '/tasks',
+    { title, dueDate, listId }
+  )
+  
+  return response.data
 }
 
 export async function getTasks(params? : GetTasksParams): Promise<PaginatedResponse<Task>> {
@@ -20,4 +18,17 @@ export async function getTasks(params? : GetTasksParams): Promise<PaginatedRespo
 	 )
 
   return data
+}
+
+export async function updateTask(id: string, data: UpdateTaskData): Promise<Task> {
+  const response = await apiClient.patch(
+    `/tasks/${id}`,
+    data,
+  )
+
+  return response.data
+}
+
+export async function deleteTask(id: string): Promise<void> {
+  await apiClient.delete(`/tasks/${id}`)
 }
