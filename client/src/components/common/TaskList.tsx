@@ -1,4 +1,4 @@
-import { Pencil, Trash2 } from 'lucide-react'
+import { Pencil, Trash2, Calendar, CircleSmall } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -18,17 +18,17 @@ import { deleteTask, updateTask } from '@/services/api/tasks'
 import { toast } from 'sonner'
 import { useState } from 'react'
 import { useIsMobile } from '@/hooks/use-mobile'
+import { formatDueDate } from '@/utils/formatDueDate'
+import type { List } from '@/types/list'
+import { Badge } from '@/components/ui/badge'
 
 interface TaskListProps {
 	tasks: Task[]
 	emptyLabel: string
+	listBadge?: boolean
 }
 
-export function TaskList({ tasks, emptyLabel }: TaskListProps) {
-
-	const isMobile = useIsMobile()
-
-	const [isFetching, setIsFetching] =  useState(false)
+export function TaskList({ tasks, emptyLabel, listBadge = true }: TaskListProps) {
 
 	if (tasks.length === 0) {
 		return( 
@@ -44,6 +44,10 @@ export function TaskList({ tasks, emptyLabel }: TaskListProps) {
 		)
 	}
 
+	const isMobile = useIsMobile()
+	const [isFetching, setIsFetching] =  useState(false)
+	const lists = queryClient.getQueryData<List[]>(['lists']) ?? []
+	
 	const handleDeleteTask = async (taskId: string) => {
 		setIsFetching(true)
 		try {
@@ -89,9 +93,39 @@ export function TaskList({ tasks, emptyLabel }: TaskListProps) {
 								}
 								className='h-5 w-5 transition-transform active:scale-90 border-primary'
 							/>
-							<p className={`min-w-0 line-clamp-3 text-sm transition-all duration-300 ${task.completed ? 'text-muted-foreground line-through' : ''}`}>
-								{task.title}
-							</p>
+							<div>
+								<p className={`min-w-0 line-clamp-3 text-sm transition-all duration-300 ${task.completed ? 'text-muted-foreground line-through' : ''}`}>
+									{task.title}
+								</p>
+								<div className='text-muted-foreground text-xs flex gap-2'>
+									{task.listId && listBadge && (
+										<Badge variant='outline'>
+											<CircleSmall
+											 className='fill-current'
+                        style={{
+                          color: lists.find((list) => list.id === task.listId)?.color || 'var(--muted-foreground)',
+                        }}
+											/>
+											{lists.find((list) => list.id === task.listId)?.title?.length! > 15
+												? `${lists.find((list) => list.id === task.listId)?.title?.slice(0, 15)}...`
+												: lists.find((list) => list.id === task.listId)?.title}
+										</Badge>
+									)}
+									{task.dueDate && (() => {
+										const dueDate = formatDueDate(task.dueDate)
+
+										return (
+											<Badge
+												variant="ghost"
+												className={`p-0 ${dueDate === 'Today' ? 'text-primary' : ''}`}
+											>
+												<Calendar />
+												{dueDate}
+											</Badge>
+										)
+									})()}
+								</div>
+							</div>
 						</div>
 						<div className={`flex shrink-0 items-center gap-1 transition-opacity ${isMobile ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
 							<Tooltip>

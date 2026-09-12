@@ -86,10 +86,9 @@ function AppLayout() {
   
   return (
     <SidebarProvider>
-
-      <Sidebar collapsible='icon' className='pt-2'>
+      <Sidebar collapsible='icon'>
        <SidebarHeader>
-          <SidebarMenu>
+          <SidebarMenu className='pt-2'>
             <SidebarMenuItem>
               <SidebarMenuButton className='hover:bg-transparent'>
                 <div className='flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary'>

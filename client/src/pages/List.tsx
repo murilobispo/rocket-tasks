@@ -7,6 +7,7 @@ import { queryClient } from '@/lib/queryClient'
 import { getTasks } from '@/services/api/tasks'
 
 import type { List } from '@/types/list'
+import { CircleSmall } from 'lucide-react'
 
 function ListPage() {
 	const { id } = useParams()
@@ -29,13 +30,24 @@ function ListPage() {
 	return (
 		<>
 			<SubHeader
-				title={list.title}
+				title={
+					<>
+						<CircleSmall
+							className='fill-current'
+							style={{
+								color: list?.color || 'var(--muted-foreground)',
+							}}
+						/>
+						{list.title}
+					</>
+				}
 				subtitle={list.description ?? ''}
 			/>
 
 			<TaskList
 				tasks={tasks.data}
 				emptyLabel='This list is empty.'
+				listBadge={false}
 			/>
 		</>
 	)
