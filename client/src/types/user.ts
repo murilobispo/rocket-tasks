@@ -6,3 +6,5 @@ export interface User {
   createdAt: string
   updatedAt: string
 }
+
+export type UpdateUser = Pick<User, 'name' | 'avatarUrl'>

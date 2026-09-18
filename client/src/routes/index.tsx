@@ -9,9 +9,11 @@ import InboxPage from '@/pages/Inbox'
 import TodayPage from '@/pages/Today'
 import UpcomingPage from '@/pages/Upcoming'
 import CompletedPage from '@/pages/Completed'
+import ProfilePage from '@/pages/Profile'
 
 export const routes = createBrowserRouter([
   {
+    id: 'app',
     path:'/',
     Component: AppLayout,
     loader: appLoader,
@@ -37,6 +39,10 @@ export const routes = createBrowserRouter([
       {
         path: 'list/:id',
         Component: ListPage
+      },
+      {
+        path: 'profile',
+        Component: ProfilePage
       }
     ]
   },

@@ -57,6 +57,7 @@ function AuthPage({ initSection = 'login' }: Props) {
 				return false
 		}
 	}
+	
 	const clearError = (key: string) => {
 		setFieldErrors((prev) => ({
 			...prev,
