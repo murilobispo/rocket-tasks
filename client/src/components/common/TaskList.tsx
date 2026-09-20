@@ -133,19 +133,6 @@ export function TaskList({ tasks, emptyLabel, listBadge = true }: TaskListProps)
 									<Button
 										variant='ghost'
 										size='icon'
-										aria-label='Edit task'
-									>
-										<Pencil className='size-4' />
-									</Button>
-									}/>
-								<TooltipContent className={'text-sm'}>Edit</TooltipContent>
-							</Tooltip>
-							
-							<Tooltip>
-								<TooltipTrigger render={
-									<Button
-										variant='ghost'
-										size='icon'
 										className='text-muted-foreground hover:text-destructive'
 										aria-label='Delete task'
 										onClick={() => handleDeleteTask(task.id)}

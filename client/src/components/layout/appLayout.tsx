@@ -59,6 +59,8 @@ import { EditListDialog } from '@/components/common/EditListDialog'
 import { useState } from 'react'
 import type { List } from '@/types/list'
 
+import SettingsDialog from '@/components/common/SettingsDialog'
+
 function AppLayout() {
 
   const { user } = useLoaderData<typeof appLoader>()
@@ -195,9 +197,13 @@ function AppLayout() {
                     <DropdownMenuItem render={<NavLink to='/profile' />}>
                       <User/>Profile
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <Settings/>Settings
-                    </DropdownMenuItem>
+                    <SettingsDialog
+                      trigger={
+                        <DropdownMenuItem closeOnClick={false}>
+                          <Settings/>Settings
+                        </DropdownMenuItem>
+                        
+                      }/>
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator/>
                   <DropdownMenuGroup>
