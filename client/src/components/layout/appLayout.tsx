@@ -60,6 +60,7 @@ import { useState } from 'react'
 import type { List } from '@/types/list'
 
 import SettingsDialog from '@/components/common/SettingsDialog'
+import { queryClient } from '@/lib/queryClient'
 
 function AppLayout() {
 
@@ -212,6 +213,7 @@ function AppLayout() {
                       onClick={() => {
                         removeToken()
                         navigate('/login')
+                        queryClient.clear()
                       }}>
                       <LogOut/>Log out
                     </DropdownMenuItem>

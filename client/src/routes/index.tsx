@@ -10,6 +10,7 @@ import TodayPage from '@/pages/Today'
 import UpcomingPage from '@/pages/Upcoming'
 import CompletedPage from '@/pages/Completed'
 import ProfilePage from '@/pages/Profile'
+import ChangePasswordPage from '@/pages/ChangePassword'
 
 export const routes = createBrowserRouter([
   {
@@ -45,6 +46,11 @@ export const routes = createBrowserRouter([
         Component: ProfilePage
       }
     ]
+  },
+  {
+    path: '/profile/change-password',
+    Component: ChangePasswordPage,
+    middleware: [authMiddleware],
   },
   {
     path: '/login', 

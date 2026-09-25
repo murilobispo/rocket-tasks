@@ -36,7 +36,8 @@ import { toast } from 'sonner'
 import { normalizeErrors } from '@/utils/normalizeErrors'
 import { isAxiosError } from 'axios'
 
-import { useRevalidator } from 'react-router'
+import { useRevalidator, Link } from 'react-router'
+import { DeleteUserDialog } from '@/components/common/DeleteUserDialog'
 
 function ProfilePage() {
   const { user } = useRouteLoaderData<typeof appLoader>('app')!
@@ -134,6 +135,36 @@ function ProfilePage() {
             Save Changes
           </Button>
         </CardFooter>
+      </Card>
+
+      <Card>
+        <CardContent>
+         <FieldSet disabled={isFetching}>
+            <FieldLegend>Security</FieldLegend>
+            <FieldDescription>Manage your password and account access.</FieldDescription>
+            <FieldGroup>
+              <Field orientation={'horizontal'} className='justify-between'>
+                <div>
+                  <FieldLabel>Change password</FieldLabel>
+                  <FieldDescription>Update your password to keep your account secure.</FieldDescription>
+                </div>
+                <Link to='/profile/change-password'>
+                  <Button variant={'outline'}>Change Password</Button>
+                </Link>
+              </Field>
+
+              <Field orientation={'horizontal'} className='justify-between'>
+                <div>
+                  <FieldLabel>Delete account</FieldLabel>
+                  <FieldDescription>Permanently delete your account.</FieldDescription>
+                </div>
+                <DeleteUserDialog trigger={
+                  <Button variant={'destructive'}>Delete Account</Button>
+                }/>
+              </Field>
+            </FieldGroup>
+          </FieldSet>
+        </CardContent>
       </Card>
     </div>
   )
