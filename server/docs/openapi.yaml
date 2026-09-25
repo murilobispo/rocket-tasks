@@ -177,6 +177,14 @@ paths:
       responses:
         '204':
           description: Password updated successfully
+        '400':
+          description: Invalid current password
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                message: Invalid current password
         '401':
           $ref: '#/components/responses/Unauthorized'
         '422':
