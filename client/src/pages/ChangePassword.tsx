@@ -1,3 +1,8 @@
+import { useState } from 'react'
+import { useNavigate } from 'react-router'
+import { isAxiosError } from 'axios'
+import { toast } from 'sonner'
+
 import {
 	Card,
 	CardContent,
@@ -6,8 +11,6 @@ import {
 	CardTitle,
 } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { toast } from 'sonner'
-import { useState } from 'react'
 import {
 	Field,
 	FieldError,
@@ -16,10 +19,9 @@ import {
 	FieldSet,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+
 import { updatePassword } from '@/services/api/users'
-import { isAxiosError } from 'axios'
 import { normalizeErrors } from '@/utils/normalizeErrors'
-import { useNavigate } from 'react-router'
 
 function ChangePasswordPage() {
 	const navigate = useNavigate()

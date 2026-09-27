@@ -1,5 +1,6 @@
-import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
+
+import { Button } from '@/components/ui/button'
 import CreateTaskDialog from '@/components/common/CreateTaskDialog'
 
 interface SubHeaderProps {

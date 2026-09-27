@@ -1,30 +1,13 @@
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
-
-import {
-  Field,
-  FieldContent,
-  FieldDescription,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-  FieldLegend,
-  FieldSeparator,
-  FieldSet,
-  FieldTitle,
-} from '@/components/ui/field'
-
-import { Switch } from '@/components/ui/switch'
-
 import { Moon, Sun } from 'lucide-react'
+
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import {
+	Field,
+	FieldDescription,
+	FieldGroup,
+	FieldTitle,
+} from '@/components/ui/field'
+import { Switch } from '@/components/ui/switch'
 import { useTheme } from '@/components/theme-provider'
 
 interface Props {

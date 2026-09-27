@@ -1,4 +1,4 @@
-import { isToday, isPast, formatDistanceToNow } from 'date-fns'
+import { isToday, formatDistanceToNow } from 'date-fns'
 
 export function formatDueDate(date: string) {
   const dueDate = new Date(date)

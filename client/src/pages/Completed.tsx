@@ -1,8 +1,8 @@
-import { SubHeader } from '@/components/common/SubHeader'
-
 import { useSuspenseQuery } from '@tanstack/react-query'
-import { getTasks } from '@/services/api/tasks'
+
+import { SubHeader } from '@/components/common/SubHeader'
 import { TaskList } from '@/components/common/TaskList'
+import { getTasks } from '@/services/api/tasks'
 
 function CompletedPage() {
 	const { data } = useSuspenseQuery({

@@ -1,66 +1,67 @@
+import { useState } from 'react'
+import { NavLink, Outlet, useLoaderData, useNavigate } from 'react-router'
 import {
-  SidebarProvider,
-  Sidebar,
-  SidebarHeader,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarGroupAction,
-  SidebarGroupContent,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-  SidebarMenuAction,
-  SidebarMenuBadge,
-  SidebarMenuSub,
-  SidebarMenuSubItem,
-  SidebarFooter,
-  SidebarRail,
-  SidebarInset,
-  SidebarTrigger,
-  useSidebar,
-} from '@/components/ui/sidebar'
+	Calendar,
+	CalendarClock,
+	CircleCheck,
+	CircleSmall,
+	Inbox,
+	LogOut,
+	Moon,
+	Pencil,
+	Plus,
+	Rocket,
+	Settings,
+	Sun,
+	Trash,
+	User,
+} from 'lucide-react'
 
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuGroup,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-
 import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from '@/components/ui/avatar'
-
-import { NavLink, Outlet, useLoaderData} from 'react-router'
-import { useSidebarData } from '@/hooks/useSidebarData'
-import { Calendar, CalendarClock, CircleCheck, CircleSmall, Inbox, Plus, Rocket, User, Settings, LogOut, Pencil, Moon, Sun, Trash} from 'lucide-react'
-import type { appLoader } from '@/routes/loaders/appLoader'
-import { Separator } from '@/components/ui/separator'
-import { Button } from "@/components/ui/button"
+	Sidebar,
+	SidebarContent,
+	SidebarFooter,
+	SidebarGroup,
+	SidebarGroupAction,
+	SidebarGroupContent,
+	SidebarGroupLabel,
+	SidebarInset,
+	SidebarMenu,
+	SidebarMenuAction,
+	SidebarMenuBadge,
+	SidebarMenuButton,
+	SidebarMenuItem,
+	SidebarProvider,
+	SidebarHeader,
+	SidebarTrigger,
+} from '@/components/ui/sidebar'
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
-
-import { useTheme } from "@/components/theme-provider"
-import { removeToken } from '@/services/auth/storage'
-import { useNavigate } from 'react-router'
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from '@/components/ui/tooltip'
 
 import { CreateListDialog } from '@/components/common/CreateListDialog'
 import { DeleteListDialog } from '@/components/common/DeleteListDialog'
 import { EditListDialog } from '@/components/common/EditListDialog'
-import { useState } from 'react'
-import type { List } from '@/types/list'
-
 import SettingsDialog from '@/components/common/SettingsDialog'
+import { useTheme } from '@/components/theme-provider'
+import { useSidebarData } from '@/hooks/useSidebarData'
 import { queryClient } from '@/lib/queryClient'
+import type { appLoader } from '@/routes/loaders/appLoader'
+import { removeToken } from '@/services/auth/storage'
+import type { List } from '@/types/list'
 
 function AppLayout() {
 

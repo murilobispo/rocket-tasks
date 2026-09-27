@@ -1,51 +1,41 @@
+import { useState } from 'react'
+import { useNavigate } from 'react-router'
+import { isAxiosError } from 'axios'
+import { Inbox, CircleSmall } from 'lucide-react'
+import { toast } from 'sonner'
+
+import { Button } from '@/components/ui/button'
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+	Dialog,
+	DialogClose,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
 } from '@/components/ui/dialog'
-
 import {
-  Field,
-  FieldContent,
-  FieldDescription,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-  FieldLegend,
-  FieldSeparator,
-  FieldSet,
-  FieldTitle,
+	Field,
+	FieldError,
+	FieldGroup,
+	FieldLabel,
+	FieldSet,
 } from '@/components/ui/field'
-
+import { Input } from '@/components/ui/input'
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
 } from '@/components/ui/select'
 
-import { useState } from 'react'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
 import { queryClient } from '@/lib/queryClient'
-import type { List } from '@/types/list'
-
 import { createTask } from '@/services/api/tasks'
-
-import { Inbox, CircleSmall } from 'lucide-react'
-
-import { toast } from 'sonner'
-import { isAxiosError } from 'axios'
+import type { List } from '@/types/list'
 import { normalizeErrors } from '@/utils/normalizeErrors'
-
-import { useNavigate } from 'react-router'
 
 interface Props {
   trigger: React.ReactElement

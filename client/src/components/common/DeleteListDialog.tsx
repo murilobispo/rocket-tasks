@@ -1,26 +1,23 @@
+import { useState } from 'react'
+import { useNavigate, useParams } from 'react-router'
+import { Trash2Icon } from 'lucide-react'
+import { toast } from 'sonner'
+
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogMedia,
-  AlertDialogTitle,
-  AlertDialogTrigger,
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogMedia,
+	AlertDialogTitle,
+	AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 
-import { Trash2Icon } from 'lucide-react'
-
-import { useState } from 'react'
-
-import { deleteList } from '@/services/api/lists'
-
-import { toast } from 'sonner'
 import { queryClient } from '@/lib/queryClient'
-import { useParams } from 'react-router'
-import { useNavigate } from 'react-router'
+import { deleteList } from '@/services/api/lists'
 
 interface Props {
 	trigger: React.ReactElement

@@ -1,13 +1,13 @@
+import { data, useParams } from 'react-router'
 import { useSuspenseQuery } from '@tanstack/react-query'
-import { data ,useParams } from 'react-router'
+import { CircleSmall } from 'lucide-react'
 
 import { SubHeader } from '@/components/common/SubHeader'
 import { TaskList } from '@/components/common/TaskList'
+
 import { queryClient } from '@/lib/queryClient'
 import { getTasks } from '@/services/api/tasks'
-
 import type { List } from '@/types/list'
-import { CircleSmall } from 'lucide-react'
 
 function ListPage() {
 	const { id } = useParams()

@@ -1,23 +1,22 @@
+import { useState } from 'react'
+import { useNavigate } from 'react-router'
+import { Trash2Icon } from 'lucide-react'
+import { toast } from 'sonner'
+
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogMedia,
-  AlertDialogTitle,
-  AlertDialogTrigger,
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogMedia,
+	AlertDialogTitle,
+	AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 
-import { Trash2Icon } from 'lucide-react'
-
-import { useState } from 'react'
-
-import { toast } from 'sonner'
 import { queryClient } from '@/lib/queryClient'
-import { useNavigate } from 'react-router'
 import { deleteMe } from '@/services/api/users'
 import { removeToken } from '@/services/auth/storage'
 

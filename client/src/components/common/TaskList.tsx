@@ -1,26 +1,22 @@
-import { Pencil, Trash2, Calendar, CircleSmall } from 'lucide-react'
+import { useState } from 'react'
+import { Calendar, CircleSmall, ListChecks, Trash2 } from 'lucide-react'
+import { toast } from 'sonner'
 
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
-
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
 } from '@/components/ui/tooltip'
 
-import { ListChecks } from 'lucide-react'
-import { queryClient } from '@/lib/queryClient'
-
-import type { Task } from '@/types/task'
-
-import { deleteTask, updateTask } from '@/services/api/tasks'
-import { toast } from 'sonner'
-import { useState } from 'react'
 import { useIsMobile } from '@/hooks/use-mobile'
-import { formatDueDate } from '@/utils/formatDueDate'
+import { queryClient } from '@/lib/queryClient'
+import { deleteTask, updateTask } from '@/services/api/tasks'
 import type { List } from '@/types/list'
-import { Badge } from '@/components/ui/badge'
+import type { Task } from '@/types/task'
+import { formatDueDate } from '@/utils/formatDueDate'
 
 interface TaskListProps {
 	tasks: Task[]

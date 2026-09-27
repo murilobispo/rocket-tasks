@@ -1,35 +1,33 @@
+import { useEffect, useState } from 'react'
+import { isAxiosError } from 'axios'
+import { toast } from 'sonner'
+
+import { Button } from '@/components/ui/button'
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
+	Dialog,
+	DialogClose,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
 } from '@/components/ui/dialog'
-
 import {
-  Field,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-  FieldSet,
+	Field,
+	FieldError,
+	FieldGroup,
+	FieldLabel,
+	FieldSet,
 } from '@/components/ui/field'
-
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-
 import { ColorPicker } from '@/components/common/ColorPicker'
-import { LIST_COLORS } from '@/constants/listColors'
-import { useEffect, useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { updateList } from '@/services/api/lists'
-import { toast } from 'sonner'
-import { queryClient } from '@/lib/queryClient'
 
-import { isAxiosError } from 'axios'
-import { normalizeErrors } from '@/utils/normalizeErrors'
+import { LIST_COLORS } from '@/constants/listColors'
+import { queryClient } from '@/lib/queryClient'
+import { updateList } from '@/services/api/lists'
 import type { List } from '@/types/list'
+import { normalizeErrors } from '@/utils/normalizeErrors'
 
 interface Props {
   list: List

@@ -1,40 +1,33 @@
+import { useState } from 'react'
+import { useNavigate } from 'react-router'
+import { isAxiosError } from 'axios'
+import { toast } from 'sonner'
+
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+	Dialog,
+	DialogClose,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
 } from '@/components/ui/dialog'
-
 import {
-  Field,
-  FieldContent,
-  FieldDescription,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-  FieldLegend,
-  FieldSeparator,
-  FieldSet,
-  FieldTitle,
-} from "@/components/ui/field"
-
+	Field,
+	FieldError,
+	FieldGroup,
+	FieldLabel,
+	FieldSet,
+} from '@/components/ui/field'
+import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-
 import { ColorPicker } from '@/components/common/ColorPicker'
-import { LIST_COLORS } from '@/constants/listColors'
-import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { createList} from '@/services/api/lists'
-import { toast } from 'sonner'
-import { useNavigate } from 'react-router'
-import { queryClient } from '@/lib/queryClient'
 
-import { isAxiosError } from 'axios'
+import { LIST_COLORS } from '@/constants/listColors'
+import { queryClient } from '@/lib/queryClient'
+import { createList } from '@/services/api/lists'
 import { normalizeErrors } from '@/utils/normalizeErrors'
 
 interface Props {

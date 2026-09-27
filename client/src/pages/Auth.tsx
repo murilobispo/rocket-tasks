@@ -1,14 +1,33 @@
-import {Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { toast } from 'sonner'
-import { Rocket } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { isSessionExpired, removeSessionExpired } from '@/services/auth/storage'
-import {Field, FieldDescription, FieldGroup, FieldLabel, FieldLegend, FieldSeparator, FieldSet, FieldError, FieldContent, FieldTitle} from '@/components/ui/field'
-import { Input } from '@/components/ui/input'
-import { login, register } from '@/services/api/auth'
 import { useNavigate } from 'react-router'
 import { isAxiosError } from 'axios'
+import { Rocket } from 'lucide-react'
+import { toast } from 'sonner'
+
+import {
+	Card,
+	CardAction,
+	CardContent,
+	CardDescription,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from '@/components/ui/card'
+import {
+	Field,
+	FieldError,
+	FieldGroup,
+	FieldLabel,
+	FieldSet,
+} from '@/components/ui/field'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+
+import { login, register } from '@/services/api/auth'
+import {
+	isSessionExpired,
+	removeSessionExpired,
+} from '@/services/auth/storage'
 import { normalizeErrors } from '@/utils/normalizeErrors'
 
 type AuthPageSection = 'login' | 'register'

@@ -1,43 +1,33 @@
-import { useRouteLoaderData } from 'react-router'
-import type { appLoader } from '@/routes/loaders/appLoader'
+import { useState } from 'react'
+import { Link, useRevalidator, useRouteLoaderData } from 'react-router'
+import { isAxiosError } from 'axios'
+import { Save } from 'lucide-react'
+import { toast } from 'sonner'
+
+import { DeleteUserDialog } from '@/components/common/DeleteUserDialog'
+import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
+	Card,
+	CardContent,
+	CardDescription,
+	CardFooter,
+	CardTitle,
 } from '@/components/ui/card'
-
 import {
-  Field,
-  FieldContent,
-  FieldDescription,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-  FieldLegend,
-  FieldSeparator,
-  FieldSet,
-  FieldTitle,
+	Field,
+	FieldDescription,
+	FieldError,
+	FieldGroup,
+	FieldLabel,
+	FieldLegend,
+	FieldSet,
 } from '@/components/ui/field'
-
 import { Input } from '@/components/ui/input'
 
-import { Button } from '@/components/ui/button'
-
-import { Save } from 'lucide-react'
-import { useState } from 'react'
-
+import type { appLoader } from '@/routes/loaders/appLoader'
 import { updateMe } from '@/services/api/users'
-import { toast } from 'sonner'
 import { normalizeErrors } from '@/utils/normalizeErrors'
-import { isAxiosError } from 'axios'
-
-import { useRevalidator, Link } from 'react-router'
-import { DeleteUserDialog } from '@/components/common/DeleteUserDialog'
 
 function ProfilePage() {
   const { user } = useRouteLoaderData<typeof appLoader>('app')!
