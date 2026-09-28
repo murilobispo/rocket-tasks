@@ -36,6 +36,16 @@ services:
       FRONTEND_PORT: ${FRONTEND_PORT}
     depends_on:
       - postgres
+  
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - '${FRONTEND_PORT}:4173'
+    depends_on:
+      - server
 
 volumes:
   postgres_data:

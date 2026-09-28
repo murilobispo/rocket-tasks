@@ -2,7 +2,7 @@ import type { MiddlewareFunction } from 'react-router'
 import { redirect } from 'react-router'
 import { getToken } from '@/services/auth/storage'
 
-export const authMiddleware: MiddlewareFunction = async ({ context }, next) => {
+export const authMiddleware: MiddlewareFunction = async (_, next) => {
   const token = getToken()
 
   if (!token) {

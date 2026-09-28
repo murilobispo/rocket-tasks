@@ -129,3 +129,18 @@
     @apply font-sans;
     }
 }
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) rotateZ(-3deg);
+  }
+
+  50% {
+    transform: translateY(-10px) rotateZ(3deg);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
