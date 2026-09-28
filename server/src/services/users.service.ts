@@ -47,7 +47,7 @@ export async function updatePassword(	userId: string, data: UpdatePasswordInput)
 	const isMatch = await bcrypt.compare(data.currentPassword, user.password)
 
 	if (!isMatch){
-		throw new AppError('Invalid current password', 401)
+		throw new AppError('Invalid current password', 400)
 	}
 
 	const hashedNewPassword = await bcrypt.hash(data.newPassword, env.SALT_ROUNDS)

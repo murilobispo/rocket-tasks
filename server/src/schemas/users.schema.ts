@@ -6,7 +6,7 @@ const { password: currentPassword } = loginSchema.shape
 
 export const updateMeSchema = z.object({
   name: name.optional(),
-  avatarUrl: z.url().max(255).optional()
+  avatarUrl: z.url().max(255).nullable().optional()
 })
 
 export const updatePasswordSchema = z.object({

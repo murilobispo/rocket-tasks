@@ -1,0 +1,56 @@
+import { data, useParams } from 'react-router'
+import { useSuspenseQuery } from '@tanstack/react-query'
+import { CircleSmall } from 'lucide-react'
+
+import { SubHeader } from '@/components/common/SubHeader'
+import { TaskList } from '@/components/common/TaskList'
+
+import { queryClient } from '@/lib/queryClient'
+import { getTasks } from '@/services/api/tasks'
+import type { List } from '@/types/list'
+
+function ListPage() {
+	const { id } = useParams()
+
+	const lists = queryClient.getQueryData<List[]>(['lists'])
+	const list = lists?.find((list) => list.id === id)
+
+	if (!list) {
+		throw data('List not found', { status: 404 })
+	}
+
+	const { data: tasks } = useSuspenseQuery({
+		queryKey: ['tasks', 'list', id],
+		queryFn: () =>
+			getTasks({
+				listId: id,
+			}),
+	})
+
+	return (
+		<>
+			<SubHeader
+				title={
+					<>
+						<CircleSmall
+							className='fill-current'
+							style={{
+								color: list?.color || 'var(--muted-foreground)',
+							}}
+						/>
+						{list.title}
+					</>
+				}
+				subtitle={list.description ?? ''}
+			/>
+
+			<TaskList
+				tasks={tasks.data}
+				emptyLabel='This list is empty.'
+				listBadge={false}
+			/>
+		</>
+	)
+}
+
+export default ListPage

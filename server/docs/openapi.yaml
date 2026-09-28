@@ -12,7 +12,7 @@ info:
   version: 1.0.0
   contact:
     name: Rocket Tasks
-    url: https://github.com/your-username/rocket-tasks
+    url: https://github.com/murilobispo/rocket-tasks
 
 security: []
 
@@ -177,6 +177,14 @@ paths:
       responses:
         '204':
           description: Password updated successfully
+        '400':
+          description: Invalid current password
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                message: Invalid current password
         '401':
           $ref: '#/components/responses/Unauthorized'
         '422':
@@ -392,8 +400,12 @@ paths:
           description: Filter tasks by list ID
           required: false
           schema:
-            type: string
-            format: uuid
+            oneOf:
+              - type: string
+                format: uuid
+              - type: string
+                enum:
+                  - "null"
           example: 67e6672e-dcf2-4852-9c70-3073d4a8bfbf
         - name: sortBy
           in: query
@@ -584,6 +596,19 @@ components:
       description: JWT token obtained from /auth/login or /auth/register
 
   schemas:
+    UserSummary:
+      type: object
+      description: Minimal user information returned on authentication
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+
     AuthResponse:
       type: object
       properties:
@@ -591,16 +616,7 @@ components:
           type: string
           description: JWT access token valid for 7 days
         user:
-          type: object
-          properties:
-            id:
-              type: string
-              format: uuid
-            name:
-              type: string
-            email:
-              type: string
-              format: email
+          $ref: '#/components/schemas/UserSummary'
 
     User:
       type: object
@@ -712,19 +728,16 @@ components:
     ValidationError:
       type: object
       properties:
-        errors:
+        formErrors:
           type: array
           items:
-            type: object
-            properties:
-              code:
-                type: string
-              message:
-                type: string
-              path:
-                type: array
-                items:
-                  type: string
+            type: string
+        fieldErrors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
 
     register_user:
       type: object
@@ -854,6 +867,7 @@ components:
         avatarUrl:
           type: string
           format: uri
+          nullable: true
       example:
         name: John Updated
 
@@ -967,11 +981,12 @@ components:
           schema:
             $ref: '#/components/schemas/ValidationError'
           example:
-            errors:
-              - code: invalid_format
-                message: Invalid email address
-                path:
-                  - email
+            formErrors: []
+            fieldErrors:
+              email:
+                - Invalid email address
+              password:
+                - String must contain at least 6 character(s)
 
     InternalServerError:
       description: Internal Server Error
