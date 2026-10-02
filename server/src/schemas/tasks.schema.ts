@@ -19,7 +19,7 @@ export const updateTaskSchema = z.object({
 
 export const getTasksQuerySchema = z.object({
   completed: z.enum(['true', 'false']).transform(value => value === 'true').optional(),
-  listId,
+  listId:  z.union([ z.uuid(), z.literal('null').transform(() => null)]).optional(),
   due: z.enum(['today', 'upcoming', 'past']).optional(),
   sortBy: z.enum(['createdAt', 'dueDate', 'title']).default('createdAt'),
   sortOrder: z.enum(['asc', 'desc']).default('desc'),

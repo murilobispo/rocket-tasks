@@ -1,6 +1,7 @@
 import path from 'node:path'
 import express from 'express'
 import helmet from 'helmet'
+import cors from 'cors'
 import { apiReference } from '@scalar/express-api-reference'
 
 import { authRoutes } from '@/routes/auth.routes'
@@ -11,6 +12,10 @@ import { errorHandler } from '@/middlewares/errorHandler'
 import { env } from './config/env'
 
 const app = express()
+
+app.use(cors({
+  origin: `http://localhost:${env.FRONTEND_PORT}`,
+}))
 
 app.use(express.json())
 
