@@ -94,7 +94,7 @@ rocket-tasks/
 │   │   ├── schemas/            # Zod validation schemas
 │   │   ├── services/           # Business logic
 │   │   ├── types/              # TypeScript types
-│   │   └── utils/              # Shared utilities
+│   │   └── utils/              # Shared utilities  
 │   ├── prisma/                 # Prisma schema and migrations
 │   ├── docs/                   # OpenAPI specification
 │   └── Dockerfile

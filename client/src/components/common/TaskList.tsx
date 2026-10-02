@@ -22,45 +22,51 @@ interface TaskListProps {
 	tasks: Task[]
 	emptyLabel: string
 	listBadge?: boolean
+	isPending?: boolean
+	isFetching?: boolean
 }
 
-export function TaskList({ tasks, emptyLabel, listBadge = true }: TaskListProps) {
+function TaskListSkeleton({ rows = 5 }: { rows?: number }) {
+	return (
+		<div className='overflow-hidden rounded-lg border border-border/80 shadow-sm' role='status' aria-label='Loading tasks'>
+			<ul>
+				{Array.from({ length: rows }).map((_, index) => (
+					<li key={index} className={`flex items-center gap-3 px-5 py-3 ${index > 0 ? 'border-t' : ''}`}>
+						<div className='h-5 w-5 animate-pulse rounded-md bg-muted' />
+						<div className='flex-1 space-y-2'>
+							<div className='h-4 animate-pulse rounded bg-muted' style={{ width: `${55 + (index % 3) * 15}%` }} />
+							<div className='h-3 w-24 animate-pulse rounded bg-muted/70' />
+						</div>
+					</li>
+				))}
+			</ul>
+		</div>
+	)
+}
 
-	if (tasks.length === 0) {
-		return( 
-			<div className='flex flex-col items-center justify-center gap-2 py-20 text-center '>
-				<div className='flex h-17 w-17 items-center justify-center rounded-2xl bg-primary/10 text-primary'>
-					<ListChecks className='h-9 w-9' />
-				</div>
-				<p className='text-lg font-medium'>{emptyLabel}</p>
-				<p className='text-sm text-muted-foreground'>
-					Tap “New task” to add your first one.
-				</p>
-			</div>
-		)
-	}
+export function TaskList({ tasks, emptyLabel, listBadge = true, isPending = false, isFetching = false }: TaskListProps) {
 
 	const isMobile = useIsMobile()
-	const [isFetching, setIsFetching] =  useState(false)
+	const [isSaving, setIsSaving] = useState(false)
 	const lists = queryClient.getQueryData<List[]>(['lists']) ?? []
-	
+
 	const handleDeleteTask = async (taskId: string) => {
-		setIsFetching(true)
+		setIsSaving(true)
 		try {
 			await deleteTask(taskId)
 			await queryClient.invalidateQueries({
 				queryKey: ['tasks'],
 			})
-		} catch (error) {
+		} catch {
 			toast.error('Failed to delete task')
 		} finally {
-			setIsFetching(false)
+			setIsSaving(false)
 		}
-	}	
+	}
 
 	const handleCompleteTask = async (taskId: string, completed: boolean) => {
 
-		setIsFetching(true)
+		setIsSaving(true)
 		try {
 			await updateTask(taskId, {
 				completed: !completed,
@@ -72,8 +78,26 @@ export function TaskList({ tasks, emptyLabel, listBadge = true }: TaskListProps)
 		} catch {
 			toast.error('Failed to update task')
 		} finally {
-			setIsFetching(false)
+			setIsSaving(false)
 		}
+	}
+
+	if (isPending || (isFetching && tasks.length === 0)) {
+		return <TaskListSkeleton />
+	}
+
+	if (tasks.length === 0) {
+		return(
+			<div className='flex flex-col items-center justify-center gap-2 py-20 text-center '>
+				<div className='flex h-17 w-17 items-center justify-center rounded-2xl bg-primary/10 text-primary'>
+					<ListChecks className='h-9 w-9' />
+				</div>
+				<p className='text-lg font-medium'>{emptyLabel}</p>
+				<p className='text-sm text-muted-foreground'>
+					Tap “New task” to add your first one.
+				</p>
+			</div>
+		)
 	}
 
 	return (
@@ -94,19 +118,24 @@ export function TaskList({ tasks, emptyLabel, listBadge = true }: TaskListProps)
 									{task.title}
 								</p>
 								<div className='text-muted-foreground text-xs flex gap-2'>
-									{task.listId && listBadge && (
-										<Badge variant='outline'>
-											<CircleSmall
-											 className='fill-current'
-                        style={{
-                          color: lists.find((list) => list.id === task.listId)?.color || 'var(--muted-foreground)',
-                        }}
-											/>
-											{lists.find((list) => list.id === task.listId)?.title?.length! > 15
-												? `${lists.find((list) => list.id === task.listId)?.title?.slice(0, 15)}...`
-												: lists.find((list) => list.id === task.listId)?.title}
-										</Badge>
-									)}
+									{task.listId && listBadge && (() => {
+										const taskList = lists.find((list) => list.id === task.listId)
+										if (!taskList) return null
+
+										return (
+											<Badge variant='outline'>
+												<CircleSmall
+													className='fill-current'
+													style={{
+														color: taskList.color || 'var(--muted-foreground)',
+													}}
+												/>
+												{taskList.title.length > 15
+													? `${taskList.title.slice(0, 15)}...`
+													: taskList.title}
+											</Badge>
+										)
+									})()}
 									{task.dueDate && (() => {
 										const dueDate = formatDueDate(task.dueDate)
 
@@ -132,7 +161,7 @@ export function TaskList({ tasks, emptyLabel, listBadge = true }: TaskListProps)
 										className='text-muted-foreground hover:text-destructive'
 										aria-label='Delete task'
 										onClick={() => handleDeleteTask(task.id)}
-										disabled={isFetching}
+										disabled={isSaving}
 									>
 										<Trash2 className='size-4' />
 									</Button>

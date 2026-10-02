@@ -1,27 +1,31 @@
-import { useSuspenseQuery } from '@tanstack/react-query'
-
 import { SubHeader } from '@/components/common/SubHeader'
 import { TaskList } from '@/components/common/TaskList'
-import { getTasks } from '@/services/api/tasks'
+import { TaskPagination } from '@/components/common/TaskPagination'
+import { useTasks } from '@/hooks/useTasks'
 
 function InboxPage() {
-	const { data } = useSuspenseQuery({
-		queryKey: ['tasks', 'inbox'],
-		queryFn: () =>
-			getTasks({
-				listId: 'null',
-			}),
-	})
-	
+	const { tasks, meta, page, onPageChange, isPending, isFetching } = useTasks(
+		['tasks', 'inbox'],
+		{ listId: 'null' }
+	)
+
 	return(
 		<>
 			<SubHeader
 				title='Inbox'
 				subtitle='Tasks without a list'
 			/>
-			<TaskList 
-				tasks={data.data} 
+			<TaskList
+				tasks={tasks}
 				emptyLabel='Inbox zero — nice work.'
+				isPending={isPending}
+				isFetching={isFetching}
+			/>
+			<TaskPagination
+				meta={meta}
+				page={page}
+				onPageChange={onPageChange}
+				isFetching={isFetching}
 			/>
 		</>
 	)

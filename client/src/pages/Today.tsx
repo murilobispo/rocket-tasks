@@ -1,27 +1,31 @@
-import { useSuspenseQuery } from '@tanstack/react-query'
-
 import { SubHeader } from '@/components/common/SubHeader'
 import { TaskList } from '@/components/common/TaskList'
-import { getTasks } from '@/services/api/tasks'
+import { TaskPagination } from '@/components/common/TaskPagination'
+import { useTasks } from '@/hooks/useTasks'
 
 function TodayPage() {
-	const { data } = useSuspenseQuery({
-		queryKey: ['tasks', 'today'],
-		queryFn: () =>
-			getTasks({
-				due: 'today'
-			}),
-	})
-	
+	const { tasks, meta, page, onPageChange, isPending, isFetching } = useTasks(
+		['tasks', 'today'],
+		{ due: 'today' }
+	)
+
 	return(
 		<>
 			<SubHeader
 				title='Today'
 				subtitle='Everything due today'
 			/>
-			<TaskList 
-				tasks={data.data} 
+			<TaskList
+				tasks={tasks}
 				emptyLabel='Nothing due today.'
+				isPending={isPending}
+				isFetching={isFetching}
+			/>
+			<TaskPagination
+				meta={meta}
+				page={page}
+				onPageChange={onPageChange}
+				isFetching={isFetching}
 			/>
 		</>
 	)

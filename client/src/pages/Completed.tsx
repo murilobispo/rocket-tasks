@@ -1,27 +1,31 @@
-import { useSuspenseQuery } from '@tanstack/react-query'
-
 import { SubHeader } from '@/components/common/SubHeader'
 import { TaskList } from '@/components/common/TaskList'
-import { getTasks } from '@/services/api/tasks'
+import { TaskPagination } from '@/components/common/TaskPagination'
+import { useTasks } from '@/hooks/useTasks'
 
 function CompletedPage() {
-	const { data } = useSuspenseQuery({
-		queryKey: ['tasks', 'completed'],
-		queryFn: () =>
-			getTasks({
-				completed: true
-			}),
-	})
-	
+	const { tasks, meta, page, onPageChange, isPending, isFetching } = useTasks(
+		['tasks', 'completed'],
+		{ completed: true }
+	)
+
 	return(
 		<>
 			<SubHeader
 				title='Completed'
 				subtitle="Tasks you've already finished"
 			/>
-			<TaskList 
-				tasks={data.data} 
+			<TaskList
+				tasks={tasks}
 				emptyLabel='Nothing completed yet.'
+				isPending={isPending}
+				isFetching={isFetching}
+			/>
+			<TaskPagination
+				meta={meta}
+				page={page}
+				onPageChange={onPageChange}
+				isFetching={isFetching}
 			/>
 		</>
 	)

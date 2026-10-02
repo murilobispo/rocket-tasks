@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 import { isAxiosError } from 'axios'
 import { Inbox, CircleSmall } from 'lucide-react'
 import { toast } from 'sonner'
@@ -44,10 +44,11 @@ interface Props {
 function CreateTaskDialog({ trigger }: Props) {
 
 	const navigate = useNavigate()
-
+	const { id: currentListId } = useParams<{ id: string }>()
+	
 	const [title, setTitle] = useState('')
 	const [dueDate, setDueDate] = useState('')
-	const [listId, setListId] = useState<string | null>(null)
+	const [listId, setListId] = useState<string | null>(currentListId ?? null)
 
 	const lists = queryClient.getQueryData<List[]>(['lists']) ?? []
 
@@ -57,18 +58,32 @@ function CreateTaskDialog({ trigger }: Props) {
 
 	const [open, setOpen] = useState(false)
 
+	const currentList = lists.find((list) => list.id === currentListId)
+
 	const selectItems = [
-		{ label: 'Inbox', value: null, icon: <Inbox /> },
-		...lists.map((list) => ({
-			label: list.title,
-			value: list.id,
+		...(currentList ? [{
+			label: currentList.title,
+			value: currentList.id,
 			icon: <CircleSmall
 							className='fill-current'
 							style={{
-								color: list.color || 'var(--muted-foreground)',
+								color: currentList.color || 'var(--muted-foreground)',
 							}}
 						/>
-		})),
+		}] : []),
+		{ label: 'Inbox', value: null, icon: <Inbox /> },
+		...lists
+			.filter((list) => list.id !== currentListId)
+			.map((list) => ({
+				label: list.title,
+				value: list.id,
+				icon: <CircleSmall
+								className='fill-current'
+								style={{
+									color: list.color || 'var(--muted-foreground)',
+								}}
+							/>
+			})),
 	]
 	
 	const clearError = (key: string) => {
@@ -81,7 +96,7 @@ function CreateTaskDialog({ trigger }: Props) {
 	const clearFields = () => {
 		setTitle('')
 		setDueDate('')
-		setListId(null)
+		setListId(currentListId ?? null)
 		setFieldErrors({})
 	}
 
